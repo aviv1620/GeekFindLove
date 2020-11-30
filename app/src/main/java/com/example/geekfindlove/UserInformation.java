@@ -6,7 +6,11 @@ public class UserInformation {
     private String ln;
     private String email;
     private String gender;
-    private boolean finished_registration;
+    private boolean isAdmin = false;
+
+    public boolean isAdmin() { return isAdmin; }
+
+    public void setAdmin(boolean admin) { isAdmin = admin; }
 
     public String getId() {
         return id;
@@ -48,12 +52,8 @@ public class UserInformation {
         this.gender = gender;
     }
 
-    public boolean isFinished_registration() {
-        return finished_registration;
-    }
+    public UserInformation(){
 
-    public void setFinished_registration(boolean finished_registration) {
-        this.finished_registration = finished_registration;
     }
 
     public UserInformation(String fn, String ln, String email, String gender, String id) {
@@ -61,7 +61,6 @@ public class UserInformation {
         this.ln = ln;
         this.email = email;
         this.gender = gender;
-        this.finished_registration=false;
     }
 
     public String toString() {

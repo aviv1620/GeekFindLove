@@ -4,16 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class FirstTimeLogin extends AppCompatActivity {
+    private static final String TAG = "FirstTimeLogin";
+
     private  UserInformation user;
     private  EditText fn; // first name
     private  EditText ln; // last name
@@ -21,6 +26,9 @@ public class FirstTimeLogin extends AppCompatActivity {
     private RadioButton Male;
     private RadioButton Female;
     private Button save_data;
+
+    //user information
+    private String userId;
 
     // firebase
     private FirebaseDatabase mDatabase; // creating database object
@@ -43,6 +51,15 @@ public class FirstTimeLogin extends AppCompatActivity {
 
         mDatabase=FirebaseDatabase.getInstance();
         dbRootRef=mDatabase.getReference();
+
+        //get user information
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) {
+            Log.e(TAG,"user not log in");
+        }
+        userId = user.getUid();
+        String emailStr = user.getEmail();
+        email.setText(emailStr);
     }
 
     // defining completionListener -> it will tell us if the saving has been succeeded or not.
@@ -52,12 +69,7 @@ public class FirstTimeLogin extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
         else{ // else it means we succeeded in saving the new client
             Toast.makeText(getApplicationContext(), "Saved successfully", Toast.LENGTH_LONG).show();
-            user.setFinished_registration(true);
-            /*
-            TO DO!!!!!!!!!!!!!!!!
-            here we need to update the user boolean variable in the firebase to be true, and not
-            only the object that in here.
-             */
+
             Intent intent = new Intent(this, UserActivity.class);
             startActivity(intent);
     }
@@ -65,7 +77,7 @@ public class FirstTimeLogin extends AppCompatActivity {
 
     public void saveRegisterButtonClick(View view){
         user= new UserInformation(fn.getText().toString(),ln.getText().toString(),email.getText().toString(),Female.isChecked()?"Female" : "Male", "0");
-        user.setId(dbRootRef.push().getKey()); // we create a unique key in that way
+        user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
          // note : if user isnt made it will create it and then insert the new node
         dbRootRef.child("users").child(user.getId()).setValue(user,completionListener); // the completionListener can tell us if the save succeeded or not.
