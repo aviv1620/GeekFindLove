@@ -36,14 +36,14 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
 //     * @return A new instance of fragment profile_fragment.
 //     */
 //    // TODO: Rename and change types and number of parameters
-//    public static profile_fragment newInstance(String param1, String param2) {
-//        profile_fragment fragment = new profile_fragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+    public static profile_fragment newInstance() {
+        profile_fragment fragment = new profile_fragment();
+        Bundle args = new Bundle();
+        //args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 //
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {

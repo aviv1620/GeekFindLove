@@ -17,11 +17,25 @@ import android.view.ViewGroup;
 public class PickUpLineFragment extends Fragment {
 
 
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public PickUpLineFragment() {
+    }
+
+    @SuppressWarnings("unused")
+    public static PickUpLineFragment newInstance(int columnCount) {
+        PickUpLineFragment fragment = new PickUpLineFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

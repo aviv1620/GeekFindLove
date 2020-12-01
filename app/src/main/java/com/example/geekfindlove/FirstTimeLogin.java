@@ -70,7 +70,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         else{ // else it means we succeeded in saving the new client
             Toast.makeText(getApplicationContext(), "Saved successfully", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, UserActivity.class);
+            Intent intent = new Intent(this, UserActivity1.class);
             startActivity(intent);
     }
     };

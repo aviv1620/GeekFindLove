@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             Intent intent = new Intent(this, AdminActivity.class);
             startActivity(intent);
         }else{
-            Intent intent = new Intent(this, UserActivity.class);
+            Intent intent = new Intent(this, UserActivity1.class);
             startActivity(intent);
         }
 

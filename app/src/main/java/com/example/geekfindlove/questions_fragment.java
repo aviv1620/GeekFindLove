@@ -38,14 +38,14 @@ public class questions_fragment extends androidx.fragment.app.Fragment { // we u
 //     * @return A new instance of fragment questions_fragment.
 //     */
 //    // TODO: Rename and change types and number of parameters
-//    public static questions_fragment newInstance(String param1, String param2) {
-//        questions_fragment fragment = new questions_fragment();
-//        Bundle args = new Bundle();
+    public static questions_fragment newInstance() {
+        questions_fragment fragment = new questions_fragment();
+        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+        fragment.setArguments(args);
+        return fragment;
+    }
 //
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
