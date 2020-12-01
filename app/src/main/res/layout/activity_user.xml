@@ -31,6 +31,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/buttonMatching"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="change_fragments"
+        android:text="matching" />
+
+    <Button
+        android:id="@+id/button_pick_up_lines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="change_fragments"
+        android:text="pick_up_lines" />
+
     <fragment
         android:id="@+id/general_fragment"
         android:name="com.example.geekfindlove.questions_fragment"

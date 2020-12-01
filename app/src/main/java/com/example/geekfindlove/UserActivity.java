@@ -78,8 +78,15 @@ public class UserActivity extends AppCompatActivity {
             ft.replace(R.id.general_fragment, fragment);
             ft.commit();
         }
-        if (view == findViewById(R.id.questions_id)) {
+        else if (view == findViewById(R.id.questions_id)) {
             fragment = new questions_fragment();
+            FragmentManager fm = getSupportFragmentManager();
+            // using ft means that we want to replace the current fragment to the new one that the user selected
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.general_fragment, fragment);
+            ft.commit();
+        }else if (view == findViewById(R.id.button_pick_up_lines)) {
+            fragment = new PickUpLineFragment();
             FragmentManager fm = getSupportFragmentManager();
             // using ft means that we want to replace the current fragment to the new one that the user selected
             FragmentTransaction ft = fm.beginTransaction();
