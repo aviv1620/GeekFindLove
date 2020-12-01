@@ -92,6 +92,15 @@ public class UserActivity extends AppCompatActivity {
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.general_fragment, fragment);
             ft.commit();
+        }else if (view == findViewById(R.id.buttonMatching)) {
+            fragment = new MatchingFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            // using ft means that we want to replace the current fragment to the new one that the user selected
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.general_fragment, fragment);
+            ft.commit();
         }
+
+
     }
 }
