@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //user can go to this activity by press back button,
-        signIn = (Button)findViewById(R.id.sign_in);
-        signUpOrSwitchUser = (Button)findViewById(R.id.sign_up_or_switch_user);
+        signIn = (Button) findViewById(R.id.sign_in);
+        signUpOrSwitchUser = (Button) findViewById(R.id.sign_up_or_switch_user);
 
         signIn.setOnClickListener(this);
         signUpOrSwitchUser.setOnClickListener(this);
 
         // firebase
-        mDatabase=FirebaseDatabase.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
 
         //get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         }
     }
 
-    private void openSignInActivity(){
+    private void openSignInActivity() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build());
 
@@ -94,14 +94,15 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     private void signIn(FirebaseUser user) {
         String s = "sign in is " + user.getDisplayName();
         signIn.setText(s);
-        dbRef = mDatabase.getReference("/users/"+user.getUid());
+        dbRef = mDatabase.getReference("/users/" + user.getUid());
         dbRef.addValueEventListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        dbRef.removeEventListener(this);
+        if (dbRef != null)
+            dbRef.removeEventListener(this);
     }
 
     @Override
@@ -113,13 +114,13 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             redirected to home page rather than information page, and therefore he didnt complete answering the setting details we need.
             now we need to check. **if user == null is not finishing setting up the information**.
          */
-        if(userInformation == null){//user not in the first time.
+        if (userInformation == null) {//user not in the first time.
             Intent intent = new Intent(this, FirstTimeLogin.class);
             startActivity(intent);
-        }else if(userInformation.isAdmin()){
+        } else if (userInformation.isAdmin()) {
             Intent intent = new Intent(this, AdminActivity.class);
             startActivity(intent);
-        }else{
+        } else {
             Intent intent = new Intent(this, UserActivity1.class);
             startActivity(intent);
         }
@@ -134,13 +135,13 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
 
     @Override
     public void onClick(View v) {
-        if(v == signIn){
+        if (v == signIn) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null)
                 signIn(user);
             else
                 Toast.makeText(this, "oops something's wrong. place try switch user and enter the main and password again.", Toast.LENGTH_LONG).show();
-        }else if (v == signUpOrSwitchUser)
+        } else if (v == signUpOrSwitchUser)
             openSignInActivity();
     }
 }
