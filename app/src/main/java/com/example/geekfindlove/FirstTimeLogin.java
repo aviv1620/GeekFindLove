@@ -257,7 +257,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
 
-        File des = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + "jpg");
+        File des = new File(getFilesDir(), System.currentTimeMillis() + "jpg");
 
         FileOutputStream fo = null;
 
@@ -266,7 +266,7 @@ public class FirstTimeLogin extends AppCompatActivity {
             fo = new FileOutputStream(des);
             fo.write(bytes.toByteArray());
             fo.close();
-
+            imageUri = Uri.fromFile(des);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -275,6 +275,8 @@ public class FirstTimeLogin extends AppCompatActivity {
         }
 
         pic.setImageBitmap(bitmap);
+
+
 
     }
 
