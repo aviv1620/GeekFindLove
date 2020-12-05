@@ -4,12 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -27,13 +32,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.utilities.Utilities;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
+
 
 public class FirstTimeLogin extends AppCompatActivity {
     private static final String TAG = "FirstTimeLogin";
@@ -50,6 +59,8 @@ public class FirstTimeLogin extends AppCompatActivity {
     // to upload picture
     private Uri imageUri;
     private ImageView pic;
+    private String userChoosenTask;
+    private ProgressDialog progressDialog;
 
 
     //user information
@@ -59,7 +70,7 @@ public class FirstTimeLogin extends AppCompatActivity {
     private FirebaseDatabase mDatabase; // creating database object
     private DatabaseReference dbRootRef; // creating reference to our database
 
-    private static final int IMAGE_REQUEST = 2;
+    private static final int IMAGE_REQUEST = 1;
     private static final int CAMERA_REQUEST_CODE = 0;
 
 
@@ -67,6 +78,7 @@ public class FirstTimeLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_login);
+
 
         //buttons and edit-text
         fn = (EditText) findViewById(R.id.firstName);
@@ -80,6 +92,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         pic = (ImageView) findViewById(R.id.imageViewPic);
         mDatabase = FirebaseDatabase.getInstance();
         dbRootRef = mDatabase.getReference();
+
 
         //get user information
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -117,9 +130,44 @@ public class FirstTimeLogin extends AppCompatActivity {
 
 
     public void OnUploadOrCaptureClick(View view) {
+        Log.v("Elad", "ok first");
+        final CharSequence[] items = {"Take Photo", "Choose from gallery", "Cancel"
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(FirstTimeLogin.this);
+        builder.setTitle("Add Photo");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // boolean result = Utility
 
-        openImage(view);
+                if (items[i].equals("Take Photo")) {
+                    userChoosenTask = "Take Photo";
+                    Log.v("Elad", "ok second");
+                    cameraIntent();
+                } else if (items[i].equals("Choose from gallery")) {
+                    userChoosenTask = "Choose from gallery";
+                    galleryIntent();
+                } else if (items[i].equals("Cancel")) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        builder.show();
+        // openImage(view);
 
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), IMAGE_REQUEST);
+    }
+
+    private void cameraIntent() {
+        Log.v("Elad", "ok third");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
     }
 
     private void openImage(View view) {
@@ -138,7 +186,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         else if (view == findViewById(R.id.buttonCapture)) {
             Log.v("Elad", "okkkkkkkkk22222222");
             Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-           // intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            // intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent1, CAMERA_REQUEST_CODE);
 
         }
@@ -148,14 +196,102 @@ public class FirstTimeLogin extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.v("Elad", "ok forth");
+        if (resultCode == RESULT_OK) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Uploading");
+            progressDialog.show();
 
-        if (( requestCode == IMAGE_REQUEST ||requestCode == CAMERA_REQUEST_CODE) && resultCode == RESULT_OK) { // getting the requested code
             imageUri = data.getData();
-            if(imageUri == null){
-                Log.v("Elad","NULL");
-            }
-            //upLoadImage();
 
+            if (requestCode == IMAGE_REQUEST) {
+                onSelectFromHalleryResult(data);
+            } else if (requestCode == CAMERA_REQUEST_CODE) {
+                Log.v("Elad", "ok fifth");
+                onCaptureImageResult(data);
+
+            }
+            if (imageUri != null) {
+                Log.v("Elad", "ok seven");
+                final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(System.currentTimeMillis() + " " + getFileExtention(imageUri));
+                //final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(imageUri.getLastPathSegment() + " " + getFileExtention(imageUri));
+                fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        Log.v("Elad", "ok eight");
+                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Log.v("Elad", "ok nine");
+                                String url = uri.toString();
+                                Log.v("Elad", url);
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "image upload successfully", Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+                    }
+                });
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "image didnt upload successfully", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+
+//        if ((requestCode == IMAGE_REQUEST || requestCode == CAMERA_REQUEST_CODE) && resultCode == RESULT_OK) { // getting the requested code
+//            imageUri = data.getData();
+//            if (imageUri == null) {
+//                Log.v("Elad", "NULL");
+//            }
+//            upLoadImage();
+//
+//        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Log.v("Elad", "ok sixth");
+        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+
+        File des = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + "jpg");
+
+        FileOutputStream fo = null;
+
+        try {
+            des.createNewFile();
+            fo = new FileOutputStream(des);
+            fo.write(bytes.toByteArray());
+            fo.close();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        pic.setImageBitmap(bitmap);
+
+    }
+
+    private void onSelectFromHalleryResult(Intent data) {
+
+        Bitmap bitmap = null;
+        if (data != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            pic.setImageBitmap(bitmap);
         }
     }
 
@@ -166,12 +302,11 @@ public class FirstTimeLogin extends AppCompatActivity {
         progressDialog.show();
 
 
-
         if (imageUri != null) {
-            Log.v("Elad","its done");
+            Log.v("Elad", "its done");
             // creating pointer to the Storage reference in FireBase
-            //final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(System.currentTimeMillis() + " " + getFileExtention(imageUri));
-            final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(imageUri.getLastPathSegment());
+            final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(System.currentTimeMillis() + " " + getFileExtention(imageUri));
+            //final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(imageUri.getLastPathSegment());
             fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -186,8 +321,7 @@ public class FirstTimeLogin extends AppCompatActivity {
                     });
                 }
             });
-        }
-        else{
+        } else {
             progressDialog.dismiss();
             Toast.makeText(getApplicationContext(), "image didnt upload successfully", Toast.LENGTH_LONG).show();
         }
