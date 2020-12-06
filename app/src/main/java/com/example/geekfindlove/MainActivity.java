@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     @Override
     protected void onStop() {
         super.onStop();
-        if (dbRef != null)
+        if(dbRef != null)
             dbRef.removeEventListener(this);
     }
 

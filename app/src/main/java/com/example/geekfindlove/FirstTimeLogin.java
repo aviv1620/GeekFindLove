@@ -244,6 +244,8 @@ public class FirstTimeLogin extends AppCompatActivity {
 
         pic.setImageBitmap(bitmap);
 
+
+
     }
 
     private void onSelectFromHalleryResult(Intent data) {

@@ -75,15 +75,15 @@ public class MatchingFragment extends Fragment {
     public static List<MatchingInformation> DummyMatchingInformations(){
         ArrayList<MatchingInformation> ans = new ArrayList<MatchingInformation>();
 
-        MatchingInformation.DstDetail dd1 = new MatchingInformation.DstDetail("0000000001","alice a","Address");
+        MatchingInformation.DstDetail dd1 = new MatchingInformation.DstDetail("0000000001","dum alice a","Address");
         MatchingInformation mi1 = new MatchingInformation(90,"dstId2","srcId1",dd1);
         ans.add(mi1);
 
-        MatchingInformation.DstDetail dd2 = new MatchingInformation.DstDetail("0000000002","Bob b","Address");
+        MatchingInformation.DstDetail dd2 = new MatchingInformation.DstDetail("0000000002","dum Bob b","Address");
         MatchingInformation mi2 = new MatchingInformation(90,"dstId2","srcId1",dd2);
         ans.add(mi2);
 
-        MatchingInformation.DstDetail dd3 = new MatchingInformation.DstDetail("0000000003","Carol b","https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters");
+        MatchingInformation.DstDetail dd3 = new MatchingInformation.DstDetail("0000000003","dum Carol b","https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters");
         MatchingInformation mi3 = new MatchingInformation(90,"dstId3","srcId1",dd3);
         ans.add(mi3);
 
