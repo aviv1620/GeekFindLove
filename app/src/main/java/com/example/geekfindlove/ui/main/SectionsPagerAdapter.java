@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.geekfindlove.MatchingFragment;
 import com.example.geekfindlove.PickUpLineFragment;
+import com.example.geekfindlove.QuestionsFragment1;
 import com.example.geekfindlove.R;
 import com.example.geekfindlove.profile_fragment;
 import com.example.geekfindlove.questions_fragment;
@@ -29,13 +30,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
     }
 
+// newInsatance(number) the number is the amount of columns we want in the list that is shown in the layout
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
                 return MatchingFragment.newInstance(1);
             case 1:
-                return  questions_fragment.newInstance();
+                return  QuestionsFragment1.newInstance(1);
             case 2:
                 return PickUpLineFragment.newInstance(1);
             case 3:

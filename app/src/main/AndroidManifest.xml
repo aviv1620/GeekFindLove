@@ -20,7 +20,6 @@
             android:theme="@style/Theme.GeekFindLove.NoActionBar"></activity>
         <activity android:name=".AdminActivity" />
         <activity android:name=".FirstTimeLogin" />
-        <activity android:name=".UserActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
