@@ -136,34 +136,24 @@
         android:id="@+id/buttonUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:onClick="OnUploadOrCaptureClick"
-        android:text="Upload"
+        android:text="Upload Picture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gender" />
-
-    <Button
-        android:id="@+id/buttonCapture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="OnUploadOrCaptureClick"
-        android:text="Capture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.806"
-        app:layout_constraintStart_toEndOf="@+id/buttonUpload"
         app:layout_constraintTop_toBottomOf="@+id/gender" />
 
     <ImageView
         android:id="@+id/imageViewPic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:adjustViewBounds="true"
+        android:maxWidth="100dip"
+        android:scaleType="fitCenter"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toEndOf="@+id/gender"
         app:layout_constraintTop_toBottomOf="@+id/email"
         tools:srcCompat="@tools:sample/avatars" />
