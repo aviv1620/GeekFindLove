@@ -7,11 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.geekfindlove.dummy.DummyContent.DummyItem;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -21,7 +26,9 @@ import java.util.List;
  */
 public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<QuestionsRecyclerViewAdapter.ViewHolder> {
 
+    private static final String TAG = "QuestionsRecycler";
     private List<QuestionsInformation> mValues;
+    private UserAnswerInformation userAnswerInformation;
 
     public void setmValues(List<QuestionsInformation> mValues) {
         this.mValues = mValues;
@@ -29,6 +36,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
     }
 
     public QuestionsRecyclerViewAdapter(List<QuestionsInformation> items) {
+        userAnswerInformation = new UserAnswerInformation();
         mValues = items;
     }
 
@@ -55,7 +63,35 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         holder.answeresFB.setAdapter(dataAdapter);
-        Log.v("Sivan", "we are here");
+        String questionID = mValues.get(position).getId();
+
+        holder.answeresFB.setOnItemSelectedListener(new ItemSelected(questionID));
+    }
+
+    class ItemSelected implements  AdapterView.OnItemSelectedListener{
+        private String questionID;
+
+        public ItemSelected(String questionID) {
+            this.questionID = questionID;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int itemPosition, long id) {
+            userAnswerInformation.put(questionID,itemPosition);
+            Log.d(TAG,questionID + "," + itemPosition);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    }
+
+    public void onSavePress(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance(); // creating database object
+        DatabaseReference dbRootRef = mDatabase.getReference(); // creating reference to our database
+        dbRootRef.child("UserAnswer").child(user.getUid()).setValue(userAnswerInformation);
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.geekfindlove.dummy.DummyContent;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class QuestionsFragment1 extends Fragment implements ValueEventListener {
+public class QuestionsFragment1 extends Fragment implements ValueEventListener, View.OnClickListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -72,18 +73,21 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions1_list, container, false);
+        //button
+        Button button = (Button)view.findViewById(R.id.buttonSave);
+        button.setOnClickListener(this);
+
+        //recyclerView
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-                recyclerView.setAdapter(q_recycle);
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        recyclerView.setAdapter(q_recycle);
         return view;
     }
 
@@ -91,6 +95,7 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener {
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         for (DataSnapshot child : dataSnapshot.getChildren()) { // going through all the childresns of clients
             QuestionsInformation questionInformation = child.getValue(QuestionsInformation.class);
+            questionInformation.setId(child.getKey());
             ans.add(questionInformation);
         }
         q_recycle.setmValues(ans);
@@ -99,5 +104,10 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener {
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        q_recycle.onSavePress();
     }
 }

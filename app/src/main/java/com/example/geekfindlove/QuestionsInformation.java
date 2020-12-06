@@ -3,11 +3,20 @@ package com.example.geekfindlove;
 import java.util.ArrayList;
 
 public class QuestionsInformation {
+    private String id;
     private String question;
     private ArrayList<String> answers;
 
     public ArrayList<String> getAnswers() {
         return answers;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setAnswers(ArrayList<String> answers) {
