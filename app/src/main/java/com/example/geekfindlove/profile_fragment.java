@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -39,12 +40,15 @@ import java.io.IOException;
  * Use the {@link profile_fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class profile_fragment extends androidx.fragment.app.Fragment { // we use extends androidx.fragment.app.Fragment instead od extend Fragment
+public class profile_fragment extends androidx.fragment.app.Fragment implements ValueEventListener { // we use extends androidx.fragment.app.Fragment instead od extend Fragment
 //
     private  TextView hello;
     private ImageView profilePic;
     private FirebaseStorage mDatabase; // creating database object
     private StorageReference dbRef; // creating reference to our database
+    private FirebaseDatabase mDatabase2; // creating database object
+    private DatabaseReference dbRef2; // creating reference to our database
+
     private Button editButton;
     //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,6 +73,7 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
 //     */
 //    // TODO: Rename and change types and number of parameters
     public static profile_fragment newInstance() {
+
         profile_fragment fragment = new profile_fragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
@@ -77,14 +82,15 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-////        if (getArguments() != null) {
-////            mParam1 = getArguments().getString(ARG_PARAM1);
-////            mParam2 = getArguments().getString(ARG_PARAM2);
-////        }
-//    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,17 +101,20 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-
+        // thats the references for the pointer to Storage in firebase(for picture)
         mDatabase=FirebaseStorage.getInstance();
+        mDatabase2 =FirebaseDatabase.getInstance();
+        // thats the references for the pointer to Real Time Data Base  in firebase(for user information);
         dbRef = mDatabase.getReference().child("Uploads/"+user.getUid()+"/profile");
+        dbRef2=mDatabase2.getReference().child("/users/" + user.getUid());
+        dbRef2.addValueEventListener(this);
 
 
-        ///DyiRMjP30ZQGiOJD5dXeVHBdBp43/1607201717347 png
+
 
         profilePic = (ImageView) view.findViewById(R.id.imageViewProfile);
         hello = (TextView) view.findViewById(R.id.textViewHello);
         editButton = (Button)view.findViewById(R.id.buttonEditProfile);
-        String s = "Hello " + user.getDisplayName();
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,11 +139,22 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
         } catch (IOException e) {
             e.printStackTrace();
         }
-        hello.setText(s);
 
-        //return inflater.inflate(R.layout.fragment_profile_fragment, container, false);
         return view;
     }
 
 
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+        UserInformation userInformation = dataSnapshot.getValue(UserInformation.class);
+        hello.setText("Hello " + userInformation.getFn() + " "+ userInformation.getLn());
+
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+    }
 }
