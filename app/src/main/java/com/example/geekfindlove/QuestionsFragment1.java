@@ -66,6 +66,7 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener, 
         }
         mDatabase = FirebaseDatabase.getInstance();
         dbRef = mDatabase.getReference("questions");
+        // each time we come to this fragment the eventValueListener will be called.
         dbRef.addValueEventListener(this);
     }
 

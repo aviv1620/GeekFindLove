@@ -1,17 +1,21 @@
 package com.example.geekfindlove;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +45,7 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
     private ImageView profilePic;
     private FirebaseStorage mDatabase; // creating database object
     private StorageReference dbRef; // creating reference to our database
+    private Button editButton;
     //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -89,6 +94,8 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
         View view =  lf.inflate(R.layout.fragment_profile_fragment, container, false);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+
+
         mDatabase=FirebaseStorage.getInstance();
         dbRef = mDatabase.getReference().child("Uploads/"+user.getUid()+"/profile");
 
@@ -97,7 +104,17 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
 
         profilePic = (ImageView) view.findViewById(R.id.imageViewProfile);
         hello = (TextView) view.findViewById(R.id.textViewHello);
+        editButton = (Button)view.findViewById(R.id.buttonEditProfile);
         String s = "Hello " + user.getDisplayName();
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), FirstTimeLogin.class);
+                startActivity(i);
+
+            }
+        });
 
 
         try {
@@ -118,4 +135,6 @@ public class profile_fragment extends androidx.fragment.app.Fragment { // we use
         //return inflater.inflate(R.layout.fragment_profile_fragment, container, false);
         return view;
     }
+
+
 }

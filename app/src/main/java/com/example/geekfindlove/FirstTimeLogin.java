@@ -25,13 +25,17 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.utilities.Utilities;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -83,8 +87,8 @@ public class FirstTimeLogin extends AppCompatActivity {
         fn = (EditText) findViewById(R.id.firstName);
         ln = (EditText) findViewById(R.id.lastName);
         email = (EditText) findViewById(R.id.email);
-        Female = (RadioButton) findViewById(R.id.maleRadio);
-        Male = (RadioButton) findViewById(R.id.femalRadio);
+        Female = (RadioButton) findViewById(R.id.femalRadio);
+        Male = (RadioButton) findViewById(R.id.maleRadio);
         save_data = (Button) findViewById(R.id.saveData);
         upload_picture = (Button) findViewById(R.id.buttonUpload);
         pic = (ImageView) findViewById(R.id.imageViewPic);
@@ -127,7 +131,6 @@ public class FirstTimeLogin extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String url = uri.toString();
-                                Log.v("Elad", url);
                                 progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), "Registeration made successfully", Toast.LENGTH_LONG).show();
                                 startActivity(intent);
@@ -141,7 +144,7 @@ public class FirstTimeLogin extends AppCompatActivity {
             }
 
 
-                Log.v("Elad","OKKK");
+
 
 
 
@@ -150,7 +153,6 @@ public class FirstTimeLogin extends AppCompatActivity {
 
     public void saveRegisterButtonClick(View view) {
 
-
         user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), Female.isChecked() ? "Female" : "Male", "0");
         user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
@@ -158,7 +160,10 @@ public class FirstTimeLogin extends AppCompatActivity {
         dbRootRef.child("users").child(user.getId()).setValue(user, completionListener); // the completionListener can tell us if the save succeeded or not.
 
 
+
+
     }
+
 
 
     public void OnUploadOrCaptureClick(View view) {

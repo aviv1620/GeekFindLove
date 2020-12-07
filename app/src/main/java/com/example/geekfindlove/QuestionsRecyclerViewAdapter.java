@@ -32,31 +32,35 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
 
     public void setmValues(List<QuestionsInformation> mValues) {
         this.mValues = mValues;
-        notifyDataSetChanged(); // notifying android that we changed the list
+        notifyDataSetChanged(); // notifying android that we changed the list,refresh the list that was empty at first.
     }
 
     public QuestionsRecyclerViewAdapter(List<QuestionsInformation> items) {
+        // initially we get an empty list, it will refresh after a sec,using the setmValues above.
         userAnswerInformation = new UserAnswerInformation();
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       // Context context;
+        // Context context;
+        // giving the one item layout and not the list here.
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_questions1, parent, false);
-       // context=parent.getContext();
+        // context=parent.getContext();
         return new ViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-      //  holder.mItem = mValues.get(position);
+        //  holder.mItem = mValues.get(position);
 //        holder.mIdView.setText(mValues.get(position).id);
 //        holder.mContentView.setText(mValues.get(position).content);
         holder.questionFB.setText(mValues.get(position).getQuestion());
         // Creating adapter for spinner
+        // because the fragment doesnt have an activity we pull out the context using holder.mView.getCointext().
+        // this is the adapter for the spinner list answers.
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(holder.mView.getContext(), android.R.layout.simple_spinner_item, mValues.get(position).getAnswers());
 
         // Drop down layout style - list view with radio button
@@ -65,10 +69,11 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         holder.answeresFB.setAdapter(dataAdapter);
         String questionID = mValues.get(position).getId();
 
+        // because in anonynmous class we cant reach the questionID varaible so we use a class that implements the ItemSelectedListener
         holder.answeresFB.setOnItemSelectedListener(new ItemSelected(questionID));
     }
 
-    class ItemSelected implements  AdapterView.OnItemSelectedListener{
+    class ItemSelected implements AdapterView.OnItemSelectedListener {
         private String questionID;
 
         public ItemSelected(String questionID) {
@@ -76,9 +81,10 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         }
 
         @Override
+        //itemPosition - is the position of the selected answer in the spinner
         public void onItemSelected(AdapterView<?> parent, View view, int itemPosition, long id) {
-            userAnswerInformation.put(questionID,itemPosition);
-            Log.d(TAG,questionID + "," + itemPosition);
+            userAnswerInformation.put(questionID, itemPosition);
+            Log.d(TAG, questionID + "," + itemPosition);
         }
 
         @Override
@@ -87,7 +93,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         }
     }
 
-    public void onSavePress(){
+    public void onSavePress() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance(); // creating database object
         DatabaseReference dbRootRef = mDatabase.getReference(); // creating reference to our database
@@ -102,14 +108,15 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public DummyItem mItem;
+        //whats inside the one item layout includes:
         public TextView questionFB;
         public Spinner answeresFB;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            questionFB=(TextView)view.findViewById(R.id.QuestionFB);
-            answeresFB=(Spinner)view.findViewById(R.id.AnsweresFB);
+            questionFB = (TextView) view.findViewById(R.id.QuestionFB);
+            answeresFB = (Spinner) view.findViewById(R.id.AnsweresFB);
         }
 
         @Override
