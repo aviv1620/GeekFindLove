@@ -132,7 +132,7 @@ public class FirstTimeLogin extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 String url = uri.toString();
                                 progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Registeration made successfully", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Operation made successfully", Toast.LENGTH_LONG).show();
                                 startActivity(intent);
                             }
                         });
