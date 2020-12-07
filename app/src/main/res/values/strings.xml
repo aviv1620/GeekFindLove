@@ -8,4 +8,12 @@
     <string name="fragment_profile_title">Profile</string>
     <string name="fragment_question_title">Question</string>
     <string name="fragment_matching_title">Matching</string>
+    <string name="title_activity_admin1">AdminActivity1</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="fragment_admin_new_questions_title">new question</string>
+    <string name="fragment_admin_edit_questions_title">edit questions</string>
+    <string name="fragment_admin_new_pickup_title">new pick up line</string>
+    <string name="fragment_admin_edit_pickup_title">edit pick up lines</string>
+    <string name="upload_success">upload success</string>
 </resources>

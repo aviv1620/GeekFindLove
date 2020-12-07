@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.geekfindlove">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"  />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GeekFindLove">
         <activity
+            android:name=".AdminActivity1"
+            android:label="@string/title_activity_admin1"
+            android:theme="@style/Theme.GeekFindLove.NoActionBar"></activity>
+        <activity
             android:name=".UserActivity1"
             android:label="@string/title_activity_user1"
-            android:theme="@style/Theme.GeekFindLove.NoActionBar"></activity>
+            android:theme="@style/Theme.GeekFindLove.NoActionBar" />
         <activity android:name=".AdminActivity" />
         <activity android:name=".FirstTimeLogin" />
         <activity android:name=".MainActivity">
@@ -27,9 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".dummy.DummyActivity" >
-
-        </activity>
+        <activity android:name=".dummy.DummyActivity"></activity>
     </application>
 
 </manifest>

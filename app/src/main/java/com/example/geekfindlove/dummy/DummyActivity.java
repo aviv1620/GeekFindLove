@@ -17,6 +17,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DummyActivity extends AppCompatActivity implements ValueEventListener {
@@ -44,12 +45,25 @@ public class DummyActivity extends AppCompatActivity implements ValueEventListen
 
 
         q.addValueEventListener(this);
+
+        //put Dummy Information
+        ArrayList<String> arrays = new ArrayList<String>();
+        arrays.add("a");
+        arrays.add("b");
+        arrays.add("c");
+
+        DummyInformation dummyInformation = new DummyInformation("test",arrays);
+        DatabaseReference dbRootRef = mDatabase.getReference();
+        dbRootRef.child("test").setValue(dummyInformation);
+
     }
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         Log.d(TAG,"childs");
         for (DataSnapshot child:dataSnapshot.getChildren())
+
+            //child.getValue(DummyInformation.class);
             Log.d(TAG,child.toString());
     }
 

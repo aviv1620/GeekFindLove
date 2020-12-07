@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             Intent intent = new Intent(this, FirstTimeLogin.class);
             startActivity(intent);
         } else if (userInformation.isAdmin()) {
-            Intent intent = new Intent(this, AdminActivity.class);
+            Intent intent = new Intent(this, AdminActivity1.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, UserActivity1.class);

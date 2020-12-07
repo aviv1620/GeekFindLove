@@ -94,6 +94,7 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener, 
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        ans.clear();
         for (DataSnapshot child : dataSnapshot.getChildren()) { // going through all the childresns of clients
             QuestionsInformation questionInformation = child.getValue(QuestionsInformation.class);
             questionInformation.setId(child.getKey());
