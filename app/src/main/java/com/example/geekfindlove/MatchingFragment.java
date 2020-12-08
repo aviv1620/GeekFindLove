@@ -1,9 +1,11 @@
 package com.example.geekfindlove;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -62,7 +67,6 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        //
 
 
         //FirebaseDatabase
@@ -94,19 +98,24 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         matchingList.clear();
-        for(DataSnapshot child:dataSnapshot.getChildren()){
+        for (DataSnapshot child : dataSnapshot.getChildren()) {
             UserAnswerInformation userAnswer = child.getValue(UserAnswerInformation.class);
             MatchingInformation matchingInformation = MatchingAlgorithmSingleton.getInstance().UserAnswerInformation_To_MatchingInformation(userAnswer);
-            if(matchingInformation != null)
+            if (matchingInformation != null)
                 matchingList.add(matchingInformation);
         }
+        // "byPrecent" anonymous class, in order to implement the comparator needed to sort the hashmap.
+        Collections.sort(matchingList,byPrecent);
+        //matchingList.sort(byPrecent);
         matchingRecyclerViewAdapter.setmValues(matchingList);
 
     }
+    // "byPrecent" lambda, in order to implement the comparator needed to sort the hashmap.
+    Comparator<MatchingInformation> byPrecent = (mi_a, mi_b) -> mi_b.getPercent() - mi_a.getPercent();
 
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
 
+        }
     }
-}
 

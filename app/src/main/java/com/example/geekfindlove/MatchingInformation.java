@@ -1,5 +1,7 @@
 package com.example.geekfindlove;
 
+import java.util.Comparator;
+
 public class MatchingInformation {
     private int percent;
     private String userIdDst;
@@ -47,6 +49,5 @@ public class MatchingInformation {
     public void setDstDetail(UserInformation dstDetail) {
         this.dstDetail = dstDetail;
     }
-
 
 }

@@ -16,4 +16,21 @@
     <string name="fragment_admin_new_pickup_title">new pick up line</string>
     <string name="fragment_admin_edit_pickup_title">edit pick up lines</string>
     <string name="upload_success">upload success</string>
+
+    <string-array name="Gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="Location">
+        <item>North</item>
+        <item>Center</item>
+        <item>South</item>
+    </string-array>
+    <string-array name="Age">
+        <item>18-30</item>
+        <item>30-45</item>
+        <item>45-60</item>
+    </string-array>
+
+
 </resources>
