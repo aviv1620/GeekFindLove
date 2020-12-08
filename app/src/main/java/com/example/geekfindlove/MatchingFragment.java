@@ -73,18 +73,19 @@ public class MatchingFragment extends Fragment {
     }
 
     public static List<MatchingInformation> DummyMatchingInformations(){
+        //https://en.wikipedia.org/wiki/Alice_and_Bob
         ArrayList<MatchingInformation> ans = new ArrayList<MatchingInformation>();
 
-        MatchingInformation.DstDetail dd1 = new MatchingInformation.DstDetail("0000000001","dum alice a","Address");
-        MatchingInformation mi1 = new MatchingInformation(90,"dstId2","srcId1",dd1);
+        UserInformation u1 = new UserInformation("alice","a","alice@a.com","female","1");
+        MatchingInformation mi1 = new MatchingInformation(90,"dstId2","srcId1",u1);
         ans.add(mi1);
 
-        MatchingInformation.DstDetail dd2 = new MatchingInformation.DstDetail("0000000002","dum Bob b","Address");
-        MatchingInformation mi2 = new MatchingInformation(90,"dstId2","srcId1",dd2);
+        UserInformation u2 = new UserInformation("bob","b","bob@a.com","male","2");
+        MatchingInformation mi2 = new MatchingInformation(90,"dstId2","srcId1",u2);
         ans.add(mi2);
 
-        MatchingInformation.DstDetail dd3 = new MatchingInformation.DstDetail("0000000003","dum Carol b","https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters");
-        MatchingInformation mi3 = new MatchingInformation(90,"dstId3","srcId1",dd3);
+        UserInformation u3 = new UserInformation("Carol","c","carol@a.com","female","3");
+        MatchingInformation mi3 = new MatchingInformation(90,"dstId3","srcId1",u3);
         ans.add(mi3);
 
         return ans;

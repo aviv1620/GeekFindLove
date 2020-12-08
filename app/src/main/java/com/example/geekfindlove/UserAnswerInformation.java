@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class UserAnswerInformation {
     private HashMap<String,Integer> answer;
-    private MatchingInformation.DstDetail  userDetails;
+    private UserInformation  userDetails;
 
     public UserAnswerInformation(){
         answer = new HashMap<>();
     }
 
-    public UserAnswerInformation(HashMap<String, Integer> answer, MatchingInformation.DstDetail userDetails) {
+    public UserAnswerInformation(HashMap<String, Integer> answer, UserInformation userDetails) {
         this.answer = answer;
         this.userDetails = userDetails;
     }
@@ -21,7 +21,7 @@ public class UserAnswerInformation {
         this.answer = answer;
     }
 
-    public void setUserDetails(MatchingInformation.DstDetail userDetails) {
+    public void setUserDetails(UserInformation userDetails) {
         this.userDetails = userDetails;
     }
 
@@ -29,7 +29,7 @@ public class UserAnswerInformation {
         return answer;
     }
 
-    public MatchingInformation.DstDetail getUserDetails() {
+    public UserInformation getUserDetails() {
         return userDetails;
     }
 

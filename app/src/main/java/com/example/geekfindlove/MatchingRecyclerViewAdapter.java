@@ -33,10 +33,11 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         MatchingInformation mi =  mValues.get(position);
-        MatchingInformation.DstDetail dd = mi.getDstDetail();
+        UserInformation u = mi.getDstDetail();
+
 
         holder.mItem = mi;
-        holder.MatchingName.setText(dd.getFullName());
+        holder.MatchingName.setText(u.getFn() + " " + u.getLn());
         String p = mi.getPercent() + "%";
         holder.MatchingPercent.setText(p);
         //holder.showNumber TODO show the number.

@@ -4,12 +4,12 @@ public class MatchingInformation {
     private int percent;
     private String userIdDst;
     private String userIdSrs;
-    private DstDetail dstDetail;
+    private UserInformation dstDetail;
 
     public MatchingInformation() {
     }
 
-    public MatchingInformation(int percent, String userIdDst, String userIdSrs, DstDetail dstDetail) {
+    public MatchingInformation(int percent, String userIdDst, String userIdSrs, UserInformation dstDetail) {
         this.percent = percent;
         this.userIdDst = userIdDst;
         this.userIdSrs = userIdSrs;
@@ -28,7 +28,7 @@ public class MatchingInformation {
         return userIdSrs;
     }
 
-    public DstDetail getDstDetail() {
+    public UserInformation getDstDetail() {
         return dstDetail;
     }
 
@@ -44,46 +44,9 @@ public class MatchingInformation {
         this.userIdSrs = userIdSrs;
     }
 
-    public void setDstDetail(DstDetail dstDetail) {
+    public void setDstDetail(UserInformation dstDetail) {
         this.dstDetail = dstDetail;
     }
 
-    static public class DstDetail{
-        private String phoneNumber;
-        private String fullName;
-        private String avatarUrl;
 
-        public DstDetail() {
-        }
-
-        public DstDetail(String phoneNumber, String fullName, String avatarUrl) {
-            this.phoneNumber = phoneNumber;
-            this.fullName = fullName;
-            this.avatarUrl = avatarUrl;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public String getFullName() {
-            return fullName;
-        }
-
-        public String getAvatarUrl() {
-            return avatarUrl;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-
-        public void setFullName(String fullName) {
-            this.fullName = fullName;
-        }
-
-        public void setAvatarUrl(String avatarUrl) {
-            this.avatarUrl = avatarUrl;
-        }
-    }
 }
