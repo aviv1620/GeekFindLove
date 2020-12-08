@@ -2,7 +2,8 @@ package com.example.geekfindlove;
 
 import android.util.Log;
 
-public class MatchingAlgorithmSingleton {
+
+public class MatchingAlgorithmSingleton{
 
     private static final String TAG = "MatchingAlgorithm";
     private static MatchingAlgorithmSingleton matchingAlgorithmSingleton;
@@ -13,7 +14,7 @@ public class MatchingAlgorithmSingleton {
         }
         return matchingAlgorithmSingleton;
     }
-    private  UserInformation me;
+    private  UserAnswerInformation me;
 
     private boolean filterAgeMin;
     private boolean filterAgeMax;
@@ -24,21 +25,29 @@ public class MatchingAlgorithmSingleton {
     private MatchingAlgorithmSingleton(){
     }
 
-    public void setFilters(boolean filterAgeMin,boolean filterAgeMax,boolean filterHeightMin,boolean filterHeightMax) {
+    public void setMe(UserAnswerInformation me) {
+        this.me = me;
+    }
+
+    public UserAnswerInformation getMe() {
+        if(me == null)
+            me = new UserAnswerInformation();
+        return me;
+    }
+
+    public void setFilters(boolean filterAgeMin, boolean filterAgeMax, boolean filterHeightMin, boolean filterHeightMax) {
         this.filterAgeMin = filterAgeMin;
         this.filterAgeMax = filterAgeMax;
         this.filterHeightMin = filterHeightMin;
         this.filterHeightMax = filterHeightMax;
     }
 
-    public void setMe(UserInformation me) {
-        this.me = me;
-    }
 
     /**
-     * 0 percent no suitable.
+     *
+     * @return null no match
      */
-    public MatchingInformation UserInformation_To_MatchingInformation(UserInformation match){
+    public MatchingInformation UserAnswerInformation_To_MatchingInformation(UserAnswerInformation match){
         if(me == null) {
             Log.e(TAG, "set me before use");
             return null;
@@ -47,8 +56,12 @@ public class MatchingAlgorithmSingleton {
         return null;
     }
 
+    /**
+     * -1 percent no match.
+     */
     private float percentAlgorithm(UserInformation match){
         //TODO write the algorithm;
         return 0;
     }
+
 }

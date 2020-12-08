@@ -27,6 +27,9 @@ public class MatchingFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
+    private ArrayList<MatchingInformation> matchingList;
+    private MatchingRecyclerViewAdapter matchingRecyclerViewAdapter;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -47,7 +50,8 @@ public class MatchingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        matchingList = new ArrayList<MatchingInformation>();
+        matchingRecyclerViewAdapter = new MatchingRecyclerViewAdapter(matchingList);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -58,34 +62,34 @@ public class MatchingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_matching_item_list, container, false);
 
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MatchingRecyclerViewAdapter(DummyMatchingInformations()));
+        Context context = view.getContext();
+
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        recyclerView.setAdapter(new MatchingRecyclerViewAdapter(DummyMatchingInformations()));
+
         return view;
     }
 
-    public static List<MatchingInformation> DummyMatchingInformations(){
+    public static List<MatchingInformation> DummyMatchingInformations() {
         //https://en.wikipedia.org/wiki/Alice_and_Bob
         ArrayList<MatchingInformation> ans = new ArrayList<MatchingInformation>();
 
-        UserInformation u1 = new UserInformation("alice","a","alice@a.com","female","1");
-        MatchingInformation mi1 = new MatchingInformation(90,"dstId2","srcId1",u1);
+        UserInformation u1 = new UserInformation("alice", "a", "alice@a.com", "female", "1");
+        MatchingInformation mi1 = new MatchingInformation(90, "dstId2", "srcId1", u1);
         ans.add(mi1);
 
-        UserInformation u2 = new UserInformation("bob","b","bob@a.com","male","2");
-        MatchingInformation mi2 = new MatchingInformation(90,"dstId2","srcId1",u2);
+        UserInformation u2 = new UserInformation("bob", "b", "bob@a.com", "male", "2");
+        MatchingInformation mi2 = new MatchingInformation(90, "dstId2", "srcId1", u2);
         ans.add(mi2);
 
-        UserInformation u3 = new UserInformation("Carol","c","carol@a.com","female","3");
-        MatchingInformation mi3 = new MatchingInformation(90,"dstId3","srcId1",u3);
+        UserInformation u3 = new UserInformation("Carol", "c", "carol@a.com", "female", "3");
+        MatchingInformation mi3 = new MatchingInformation(90, "dstId3", "srcId1", u3);
         ans.add(mi3);
 
         return ans;

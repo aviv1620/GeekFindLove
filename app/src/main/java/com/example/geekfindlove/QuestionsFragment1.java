@@ -74,10 +74,11 @@ public class QuestionsFragment1 extends Fragment implements ValueEventListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions1_list, container, false);
-        //button
+
         Button button = (Button)view.findViewById(R.id.buttonSave);
         button.setOnClickListener(this);
 
+        //because we have button outside the list we want the view not be the list, just pert of the view.
         //recyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
 

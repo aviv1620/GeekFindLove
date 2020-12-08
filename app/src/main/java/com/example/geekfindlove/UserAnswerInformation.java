@@ -8,9 +8,7 @@ public class UserAnswerInformation {
     private HashMap<String,Integer> answer;
     private UserInformation  userDetails;
 
-    public UserAnswerInformation(){
-        answer = new HashMap<>();
-    }
+    public UserAnswerInformation(){}
 
     public UserAnswerInformation(HashMap<String, Integer> answer, UserInformation userDetails) {
         this.answer = answer;

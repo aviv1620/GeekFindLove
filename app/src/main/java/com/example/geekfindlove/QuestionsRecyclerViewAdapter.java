@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
 
     private static final String TAG = "QuestionsRecycler";
     private List<QuestionsInformation> mValues;
-    private UserAnswerInformation userAnswerInformation;
+    private HashMap<String,Integer> answer;
 
     public void setmValues(List<QuestionsInformation> mValues) {
         this.mValues = mValues;
@@ -37,7 +38,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
 
     public QuestionsRecyclerViewAdapter(List<QuestionsInformation> items) {
         // initially we get an empty list, it will refresh after a sec,using the setmValues above.
-        userAnswerInformation = new UserAnswerInformation();
+        answer = new HashMap<>();
         mValues = items;
     }
 
@@ -83,7 +84,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         @Override
         //itemPosition - is the position of the selected answer in the spinner
         public void onItemSelected(AdapterView<?> parent, View view, int itemPosition, long id) {
-            userAnswerInformation.put(questionID, itemPosition);
+            answer.put(questionID, itemPosition);
             Log.d(TAG, questionID + "," + itemPosition);
         }
 
@@ -97,6 +98,9 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance(); // creating database object
         DatabaseReference dbRootRef = mDatabase.getReference(); // creating reference to our database
+
+        UserAnswerInformation userAnswerInformation = MatchingAlgorithmSingleton.getInstance().getMe();
+        userAnswerInformation.setAnswer(answer);
         dbRootRef.child("UserAnswer").child(user.getUid()).setValue(userAnswerInformation);
     }
 

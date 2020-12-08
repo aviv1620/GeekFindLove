@@ -13,7 +13,6 @@ import com.example.geekfindlove.PickUpLineFragment;
 import com.example.geekfindlove.QuestionsFragment1;
 import com.example.geekfindlove.R;
 import com.example.geekfindlove.profile_fragment;
-import com.example.geekfindlove.questions_fragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

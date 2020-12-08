@@ -158,7 +158,8 @@ public class FirstTimeLogin extends AppCompatActivity {
         // inserting into user node a child - new node as the new user.id that we recieved.
         // note : if user isnt made it will create it and then insert the new node
         dbRootRef.child("users").child(user.getId()).setValue(user, completionListener); // the completionListener can tell us if the save succeeded or not.
-
+        // once a user is being register, we want to save his information also in the UserAnsweres in firebase, so there we wont need to search him up all over again‏
+        dbRootRef.child("UserAnswer").child(user.getId()).child("userDetails").setValue(user);
 
 
 
