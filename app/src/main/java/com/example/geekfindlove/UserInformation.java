@@ -6,7 +6,25 @@ public class UserInformation {
     private String ln;
     private String email;
     private String gender;
+    private int age;
+    private String Location;
     private boolean isAdmin = false;
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
 
     public boolean isAdmin() { return isAdmin; }
 
@@ -56,11 +74,13 @@ public class UserInformation {
 
     }
 
-    public UserInformation(String fn, String ln, String email, String gender, String id) {
+    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location) {
         this.fn = fn;
         this.ln = ln;
         this.email = email;
         this.gender = gender;
+        this.age = age;
+        this.Location = Location;
     }
 
     public String toString() {

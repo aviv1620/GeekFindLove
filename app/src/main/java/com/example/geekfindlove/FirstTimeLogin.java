@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Space;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.data.model.User;
@@ -54,6 +56,8 @@ public class FirstTimeLogin extends AppCompatActivity {
     private EditText fn; // first name
     private EditText ln; // last name
     private EditText email; // first name
+    private EditText age;
+    private Spinner location;
     private RadioButton Male;
     private RadioButton Female;
     private Button save_data;
@@ -92,6 +96,9 @@ public class FirstTimeLogin extends AppCompatActivity {
         save_data = (Button) findViewById(R.id.saveData);
         upload_picture = (Button) findViewById(R.id.buttonUpload);
         pic = (ImageView) findViewById(R.id.imageViewPic);
+        age =  (EditText) findViewById(R.id.age);
+        location = (Spinner) findViewById(R.id.location);
+
         mDatabase = FirebaseDatabase.getInstance();
         dbRootRef = mDatabase.getReference();
 
@@ -152,8 +159,9 @@ public class FirstTimeLogin extends AppCompatActivity {
     };
 
     public void saveRegisterButtonClick(View view) {
-
-        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), Female.isChecked() ? "Female" : "Male", "0");
+        int ageInt = Integer.parseInt( age.getText().toString() );
+        String locationStr = location.getSelectedItem().toString();
+        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), Female.isChecked() ? "Female" : "Male", "0",ageInt,locationStr);
         user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
         // note : if user isnt made it will create it and then insert the new node

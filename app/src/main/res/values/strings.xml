@@ -18,15 +18,18 @@
     <string name="upload_success">upload success</string>
 
     <string-array name="Gender">
+        <item>Gender</item>
         <item>Male</item>
         <item>Female</item>
     </string-array>
     <string-array name="Location">
+        <item>Location</item>
         <item>North</item>
         <item>Center</item>
         <item>South</item>
     </string-array>
     <string-array name="Age">
+        <item>Age</item>
         <item>18-30</item>
         <item>30-45</item>
         <item>45-60</item>
