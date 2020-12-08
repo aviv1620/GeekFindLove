@@ -21,33 +21,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  */
-public class MatchingFragment extends Fragment implements ValueEventListener {
+public class AdminQuestionFragment extends Fragment implements ValueEventListener {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private ArrayList<MatchingInformation> matchingList;
-    private MatchingRecyclerViewAdapter matchingRecyclerViewAdapter;
-
+    private ArrayList<QuestionsInformation> ans;
+    private AdminQuestionRecyclerViewAdapter q_recycle;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MatchingFragment() {
+    public AdminQuestionFragment() {
     }
 
-
+    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static MatchingFragment newInstance(int columnCount) {
-        MatchingFragment fragment = new MatchingFragment();
+    public static AdminQuestionFragment newInstance(int columnCount) {
+        AdminQuestionFragment fragment = new AdminQuestionFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -57,51 +53,48 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        matchingList = new ArrayList<MatchingInformation>();
-        matchingRecyclerViewAdapter = new MatchingRecyclerViewAdapter(matchingList);
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        //
 
-
-        //FirebaseDatabase
+        ans = new ArrayList<>(); // initializing
+        q_recycle= new AdminQuestionRecyclerViewAdapter(ans);
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = mDatabase.getReference("UserAnswer");
+        DatabaseReference dbRef = mDatabase.getReference("questions");
+        // each time we come to this fragment the eventValueListener will be called.
         dbRef.addValueEventListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_matching_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_question_item_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         // Set the adapter
-        Context context = view.getContext();
-
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            recyclerView.setAdapter(q_recycle);
         }
-
-        recyclerView.setAdapter(matchingRecyclerViewAdapter);
-
         return view;
     }
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        matchingList.clear();
-        for(DataSnapshot child:dataSnapshot.getChildren()){
-            UserAnswerInformation userAnswer = child.getValue(UserAnswerInformation.class);
-            MatchingInformation matchingInformation = MatchingAlgorithmSingleton.getInstance().UserAnswerInformation_To_MatchingInformation(userAnswer);
-            if(matchingInformation != null)
-                matchingList.add(matchingInformation);
+        ans.clear();
+        for (DataSnapshot child : dataSnapshot.getChildren()) { // going through all the childresns of clients
+            QuestionsInformation questionInformation = child.getValue(QuestionsInformation.class);
+            questionInformation.setId(child.getKey());
+            ans.add(questionInformation);
         }
-        matchingRecyclerViewAdapter.setmValues(matchingList);
 
+        q_recycle.setmValues(ans);
     }
 
     @Override
@@ -109,4 +102,3 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
 
     }
 }
-

@@ -40,7 +40,7 @@ import java.io.IOException;
  * Use the {@link profile_fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class profile_fragment extends androidx.fragment.app.Fragment implements ValueEventListener { // we use extends androidx.fragment.app.Fragment instead od extend Fragment
+public class profile_fragment extends androidx.fragment.app.Fragment implements ValueEventListener, View.OnClickListener { // we use extends androidx.fragment.app.Fragment instead od extend Fragment
 //
     private  TextView hello;
     private ImageView profilePic;
@@ -116,14 +116,7 @@ public class profile_fragment extends androidx.fragment.app.Fragment implements 
         hello = (TextView) view.findViewById(R.id.textViewHello);
         editButton = (Button)view.findViewById(R.id.buttonEditProfile);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), FirstTimeLogin.class);
-                startActivity(i);
-
-            }
-        });
+        editButton.setOnClickListener(this);
 
 
         try {
@@ -156,5 +149,11 @@ public class profile_fragment extends androidx.fragment.app.Fragment implements 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(getActivity(), FirstTimeLogin.class);
+        startActivity(i);
     }
 }

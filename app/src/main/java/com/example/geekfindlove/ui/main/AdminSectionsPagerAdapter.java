@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.geekfindlove.AdminNewQuestionFragment;
+import com.example.geekfindlove.AdminQuestionFragment;
 import com.example.geekfindlove.R;
 
 /**
@@ -32,6 +33,8 @@ public class AdminSectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0:
                 return AdminNewQuestionFragment.newInstance();
+            case 1:
+                return AdminQuestionFragment.newInstance(1);
 
         }
         // getItem is called to instantiate the fragment for the given page.

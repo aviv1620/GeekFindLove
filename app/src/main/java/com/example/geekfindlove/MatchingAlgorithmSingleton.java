@@ -53,7 +53,9 @@ public class MatchingAlgorithmSingleton{
             return null;
         }
         //TODO make MatchingInformation.
-        return null;
+        UserInformation u1 = new UserInformation("alice", "a", "alice@a.com", "female", "BgnkBYOP7dg8cY3Wc7GezM3IBSv2");
+        MatchingInformation mi1 = new MatchingInformation(90, "BgnkBYOP7dg8cY3Wc7GezM3IBSv2", "srcId1", u1);
+        return mi1;
     }
 
     /**
