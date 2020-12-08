@@ -16,6 +16,8 @@
     <string name="fragment_admin_new_pickup_title">new pick up line</string>
     <string name="fragment_admin_edit_pickup_title">edit pick up lines</string>
     <string name="upload_success">upload success</string>
+    <string name="send_">send success</string>
+    <string name="send_success">send success</string>
 
     <string-array name="Gender">
         <item>Gender</item>

@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.geekfindlove.AdminNewPickUpLineFragment;
 import com.example.geekfindlove.AdminNewQuestionFragment;
+import com.example.geekfindlove.AdminPickUpLineFragment;
 import com.example.geekfindlove.AdminQuestionFragment;
 import com.example.geekfindlove.R;
 
@@ -35,6 +37,10 @@ public class AdminSectionsPagerAdapter extends FragmentPagerAdapter {
                 return AdminNewQuestionFragment.newInstance();
             case 1:
                 return AdminQuestionFragment.newInstance(1);
+            case 2:
+                return AdminNewPickUpLineFragment.newInstance();
+            case 3:
+                return AdminPickUpLineFragment.newInstance(1);
 
         }
         // getItem is called to instantiate the fragment for the given page.

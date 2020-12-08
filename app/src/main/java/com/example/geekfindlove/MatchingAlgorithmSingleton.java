@@ -50,7 +50,7 @@ public class MatchingAlgorithmSingleton {
      * @return null no match
      */
     public MatchingInformation UserAnswerInformation_To_MatchingInformation(UserAnswerInformation match) {
-        if (me == null) {
+        if (me == null || me.getAnswer() == null) {
             Log.e(TAG, "set me before use");
             return null;
         }

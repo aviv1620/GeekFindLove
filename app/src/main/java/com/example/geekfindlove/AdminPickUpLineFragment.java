@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,25 +26,26 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of Items.
  */
-public class AdminQuestionFragment extends Fragment implements ValueEventListener {
+public class AdminPickUpLineFragment extends Fragment implements ValueEventListener {
+
 
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String TAG = "AdminPickUpLine";
+
     private int mColumnCount = 1;
-
-    private ArrayList<QuestionsInformation> ans;
-    private AdminQuestionRecyclerViewAdapter q_recycle;
-
+    private ArrayList<PickUpLineInformation> pickUpLineList;
+    private AdminPickUpLineRecyclerViewAdapter recyclerViewAdapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public AdminQuestionFragment() {
+    public AdminPickUpLineFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static AdminQuestionFragment newInstance(int columnCount) {
-        AdminQuestionFragment fragment = new AdminQuestionFragment();
+    public static AdminPickUpLineFragment newInstance(int columnCount) {
+        AdminPickUpLineFragment fragment = new AdminPickUpLineFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -57,11 +59,12 @@ public class AdminQuestionFragment extends Fragment implements ValueEventListene
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-
-        ans = new ArrayList<>(); // initializing
-        q_recycle= new AdminQuestionRecyclerViewAdapter(ans);
+        //
+        pickUpLineList = new ArrayList<>(); // initializing
+        recyclerViewAdapter= new AdminPickUpLineRecyclerViewAdapter(pickUpLineList);
+        //firebase
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = mDatabase.getReference("questions");
+        DatabaseReference dbRef = mDatabase.getReference("pickUpLine");
         // each time we come to this fragment the eventValueListener will be called.
         dbRef.addValueEventListener(this);
     }
@@ -69,7 +72,7 @@ public class AdminQuestionFragment extends Fragment implements ValueEventListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_question_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_pickupline_item_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -80,20 +83,23 @@ public class AdminQuestionFragment extends Fragment implements ValueEventListene
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(q_recycle);
+            recyclerView.setAdapter(recyclerViewAdapter);
         }
         return view;
     }
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        ans.clear();
-        for (DataSnapshot child : dataSnapshot.getChildren()) { // going through all the childresns of clients
-            QuestionsInformation questionInformation = child.getValue(QuestionsInformation.class);
-            questionInformation.setId(child.getKey());
-            ans.add(questionInformation);
+        pickUpLineList.clear();
+        for(DataSnapshot child:dataSnapshot.getChildren()){
+            String value = child.getValue(String.class);
+            String key = child.getKey();
+            PickUpLineInformation pickUpLine = new PickUpLineInformation(key,value);
+            pickUpLineList.add(pickUpLine);
+            Log.d(TAG,pickUpLine.toString());
         }
-        q_recycle.setmValues(ans);
+        recyclerViewAdapter.setmValues(pickUpLineList);
+
     }
 
     @Override

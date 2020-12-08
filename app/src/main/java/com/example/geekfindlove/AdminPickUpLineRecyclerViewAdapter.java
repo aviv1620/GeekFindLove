@@ -9,46 +9,37 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.geekfindlove.dummy.DummyContent.DummyItem;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class AdminQuestionRecyclerViewAdapter extends RecyclerView.Adapter<AdminQuestionRecyclerViewAdapter.ViewHolder> {
+public class AdminPickUpLineRecyclerViewAdapter extends RecyclerView.Adapter<AdminPickUpLineRecyclerViewAdapter.ViewHolder> {
 
-    private List<QuestionsInformation> mValues;
+    private List<PickUpLineInformation> mValues;
 
-    public AdminQuestionRecyclerViewAdapter(List<QuestionsInformation> items) {
+    public AdminPickUpLineRecyclerViewAdapter(List<PickUpLineInformation> items) {
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_admin_question_item, parent, false);
+                .inflate(R.layout.fragment_admin_pickupline_item, parent, false);
         return new ViewHolder(view);
-    }
-
-    public void setmValues(List<QuestionsInformation> mValues) {
-        this.mValues = mValues;
-        notifyDataSetChanged(); // notifying android that we changed the list,refresh the list that was empty at first.
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        String str = mValues.get(position).getQuestion();
-        for(String ans:mValues.get(position).getAnswers())
-            str += "\n*" + ans;
+        holder.mContentView.setText(mValues.get(position).getValue());
 
-        holder.mContentView.setText(str);
-
-        holder.questionId =  mValues.get(position).getId();
-        holder.mButtonDelete.setOnClickListener(holder);
+        holder.databaseKey = mValues.get(position).getKey();
+        holder.mDeleteButton.setOnClickListener(holder);
     }
 
     @Override
@@ -56,19 +47,24 @@ public class AdminQuestionRecyclerViewAdapter extends RecyclerView.Adapter<Admin
         return mValues.size();
     }
 
+    public void setmValues(ArrayList<PickUpLineInformation> pickUpLineList) {
+        this.mValues = mValues;
+        notifyDataSetChanged(); // notifying android that we changed the list,refresh the list that was empty at first.
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
         public final TextView mContentView;
-        public QuestionsInformation mItem;
-        public Button mButtonDelete;
+        public PickUpLineInformation mItem;
+        public Button mDeleteButton;
 
-        public String questionId;
+        public String databaseKey;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
-            mButtonDelete = (Button) view.findViewById(R.id.buttonDelete);
+            mDeleteButton = (Button) view.findViewById(R.id.button3);
         }
 
         @Override
@@ -78,9 +74,8 @@ public class AdminQuestionRecyclerViewAdapter extends RecyclerView.Adapter<Admin
 
         @Override
         public void onClick(View v) {
-            //delete button
             FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-            mDatabase.getReference("questions").child(questionId).removeValue();
+            mDatabase.getReference("pickUpLine").child(databaseKey).removeValue();
         }
     }
 }
