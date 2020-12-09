@@ -19,13 +19,16 @@ public class MatchingAlgorithmSingleton {
 
     private UserAnswerInformation me;
 
-    private boolean filterAgeMin;
-    private boolean filterAgeMax;
-
-    private boolean filterHeightMin;
-    private boolean filterHeightMax;
+    private int myMinAge;
+    private int myMaxAge;
+    private String myLoctaion;
 
     private MatchingAlgorithmSingleton() {
+        //default values in case the user doesnt want to filter searching.
+        myMinAge = 18;
+        myMaxAge = 60;
+        myLoctaion = "Location";
+
     }
 
     public void setMe(UserAnswerInformation me) {
@@ -38,11 +41,11 @@ public class MatchingAlgorithmSingleton {
         return me;
     }
 
-    public void setFilters(boolean filterAgeMin, boolean filterAgeMax, boolean filterHeightMin, boolean filterHeightMax) {
-        this.filterAgeMin = filterAgeMin;
-        this.filterAgeMax = filterAgeMax;
-        this.filterHeightMin = filterHeightMin;
-        this.filterHeightMax = filterHeightMax;
+    public void setFilters(int minAge, int maxAge, String loctaion) {
+        this.myMinAge = minAge;
+        this.myMaxAge = maxAge;
+        this.myLoctaion = loctaion;
+
     }
 
 
@@ -62,8 +65,13 @@ public class MatchingAlgorithmSingleton {
 
         UserInformation user = match.getUserDetails();
         //UserInformation u1 = new UserInformation("alice", "a", "alice@a.com", "female", "BgnkBYOP7dg8cY3Wc7GezM3IBSv2");
-        MatchingInformation mi1 = new MatchingInformation(percentAlgorithm(match), user.getId(), me.getUserDetails().getId(), user);
-        return mi1;
+        int percentage = percentAlgorithm(match);
+        if (percentage != -1) {
+            MatchingInformation mi1 = new MatchingInformation(percentage, user.getId(), me.getUserDetails().getId(), user);
+            return mi1;
+        } else
+            return null;
+
     }
 
     /**
@@ -73,6 +81,25 @@ public class MatchingAlgorithmSingleton {
         double count = 0; // count how many questions the two user answered the same. so then we can divide and get the percentage
         double num_of_questions = 0; // if one user answered 10 question, and one user answered 20 questions,
         // we want the sum of question they both answered, regardless the answer
+        int candidentAge = match.getUserDetails().getAge();
+        String candidentLocation = match.getUserDetails().getLocation();
+
+        String myWantedGender = me.getUserDetails().getActualOrientation(); //Men ,Women, Both
+        String candidentWantedGender = match.getUserDetails().getActualOrientation();
+
+        if (candidentAge < myMinAge || candidentAge > myMaxAge) { // not correspond with my filter choice.(for age).
+            return -1;
+        } else if (!candidentLocation.equals(myLoctaion)) { // the same for not equal wanted location search.
+            return -1;
+        }
+
+        // here we wanna check if my choice equals to the other side Gender or my choice equals to both genders
+        // and respectivly the other side choice - if its equals to my Gender or the other side choice is both.
+        else if (!(myWantedGender.equals(match.getUserDetails().getGender()) || myWantedGender.equals("Both")
+                && match.getUserDetails().getActualOrientation().equals(me.getUserDetails().getGender()) || match.getUserDetails().getActualOrientation().equals("Both"))) {
+            return -1;
+        }
+
 
         for (Map.Entry mapElement : me.getAnswer().entrySet()) {
             // extracting the question id and the answer that belongs to it

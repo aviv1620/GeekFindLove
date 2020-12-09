@@ -77,7 +77,7 @@ public class PickUpLineFragment extends Fragment implements ValueEventListener {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-           // recyclerView.setAdapter(new PickUpLineRecyclerViewAdapter(PickUpLineRecyclerViewAdapter.DummyPickUpLine()));
+            //recyclerView.setAdapter(new PickUpLineRecyclerViewAdapter(PickUpLineRecyclerViewAdapter.DummyPickUpLine()));
             recyclerView.setAdapter(p_recycle);
         }
         return view;

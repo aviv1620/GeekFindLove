@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class MatchingFragment extends Fragment implements ValueEventListener  {
+public class MatchingFragment extends Fragment implements ValueEventListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -41,6 +41,8 @@ public class MatchingFragment extends Fragment implements ValueEventListener  {
 
 
     // add spinners
+    private Spinner location;
+    private Spinner age;
     private ArrayList<MatchingInformation> matchingList;
     private MatchingRecyclerViewAdapter matchingRecyclerViewAdapter;
 
@@ -72,6 +74,7 @@ public class MatchingFragment extends Fragment implements ValueEventListener  {
         }
 
 
+
         //FirebaseDatabase
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = mDatabase.getReference("UserAnswer");
@@ -86,6 +89,9 @@ public class MatchingFragment extends Fragment implements ValueEventListener  {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         // Set the adapter
         Context context = view.getContext();
+
+        age = (Spinner)view.findViewById(R.id.ageSpinner);
+        location = (Spinner)view.findViewById(R.id.locationSpinner);
 
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -108,18 +114,26 @@ public class MatchingFragment extends Fragment implements ValueEventListener  {
                 matchingList.add(matchingInformation);
         }
         // "byPrecent" anonymous class, in order to implement the comparator needed to sort the hashmap.
-        Collections.sort(matchingList,byPrecent);
+        Collections.sort(matchingList, byPrecent);
         //matchingList.sort(byPrecent);
         matchingRecyclerViewAdapter.setmValues(matchingList);
-       //MatchingAlgorithmSingleton.getInstance().setFilters();
+        // converting the spinner age to two int varaibels.
+        String [] splitAge = age.getSelectedItem().toString().split("-");
+        int minAge = Integer.parseInt(splitAge[0]);
+        int maxAge = Integer.parseInt(splitAge[1]);
+        // taking the location value from location Spinner
+        String locationn = location.getSelectedItem().toString();
+
+         MatchingAlgorithmSingleton.getInstance().setFilters(minAge,maxAge,locationn);
 
     }
+
     // "byPrecent" lambda, in order to implement the comparator needed to sort the hashmap.
     Comparator<MatchingInformation> byPrecent = (mi_a, mi_b) -> mi_b.getPercent() - mi_a.getPercent();
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
     }
+}
 

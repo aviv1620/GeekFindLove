@@ -1,5 +1,7 @@
 package com.example.geekfindlove;
 
+
+
 public class UserInformation {
     private String id;
     private String fn;
@@ -9,9 +11,18 @@ public class UserInformation {
     private int age;
     private String Location;
     private boolean isAdmin = false;
+    private String actualOrientation; // sexual orieantation.
 
     public int getAge() {
         return age;
+    }
+
+    public String getActualOrientation() {
+        return actualOrientation;
+    }
+
+    public void setActualOrientation(String actualOrientation) {
+        this.actualOrientation = actualOrientation;
     }
 
     public String getLocation() {
@@ -74,13 +85,14 @@ public class UserInformation {
 
     }
 
-    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location) {
+    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location,String actualOrientation) {
         this.fn = fn;
         this.ln = ln;
         this.email = email;
         this.gender = gender;
         this.age = age;
         this.Location = Location;
+        this.actualOrientation=actualOrientation;
     }
 
     public String toString() {

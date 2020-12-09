@@ -38,7 +38,6 @@ public class PickUpLineRecyclerViewAdapter extends RecyclerView.Adapter<PickUpLi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mContentView.setText(mValues.get(position).getValue());
 
-
     }
 
     @Override

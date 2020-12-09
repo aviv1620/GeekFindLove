@@ -19,6 +19,7 @@
     <string name="send_">send success</string>
     <string name="send_success">send success</string>
 
+
     <string-array name="Gender">
         <item>Gender</item>
         <item>Male</item>

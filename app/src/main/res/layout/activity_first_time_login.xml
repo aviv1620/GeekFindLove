@@ -142,13 +142,13 @@
             android:id="@+id/buttonUpload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="92dp"
             android:onClick="OnUploadOrCaptureClick"
             android:text="Upload Picture"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.546"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gender" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <ImageView
             android:id="@+id/imageViewPic"
@@ -208,6 +208,44 @@
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/location" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="123dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="28dp"
+            android:text="Intrested in:"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gender" />
+
+        <RadioGroup
+            android:layout_width="157dp"
+            android:layout_height="157dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPic">
+
+            <RadioButton
+                android:id="@+id/radioButtonMen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Men" />
+
+            <RadioButton
+                android:id="@+id/radioButtonWomen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Women" />
+
+            <RadioButton
+                android:id="@+id/radioButtonBoth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Both" />
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

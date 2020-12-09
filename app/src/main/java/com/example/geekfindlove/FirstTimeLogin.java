@@ -50,6 +50,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 //Todo: need to add Permissions for camera while the user needs to use it to insert a photo to his/hers profile.
+
 public class FirstTimeLogin extends AppCompatActivity {
     private static final String TAG = "FirstTimeLogin";
     private UserInformation user;
@@ -58,8 +59,11 @@ public class FirstTimeLogin extends AppCompatActivity {
     private EditText email; // first name
     private EditText age;
     private Spinner location;
-    private RadioButton Male;
-    private RadioButton Female;
+    private RadioButton male;
+    private RadioButton female;
+    private RadioButton men;
+    private RadioButton women;
+    private RadioButton both;
     private Button save_data;
     private Button upload_picture;
     // to upload picture
@@ -91,8 +95,11 @@ public class FirstTimeLogin extends AppCompatActivity {
         fn = (EditText) findViewById(R.id.firstName);
         ln = (EditText) findViewById(R.id.lastName);
         email = (EditText) findViewById(R.id.email);
-        Female = (RadioButton) findViewById(R.id.femalRadio);
-        Male = (RadioButton) findViewById(R.id.maleRadio);
+        female = (RadioButton) findViewById(R.id.femalRadio);
+        male = (RadioButton) findViewById(R.id.maleRadio);
+        both = (RadioButton) findViewById(R.id.radioButtonBoth);
+        men = (RadioButton) findViewById(R.id.radioButtonMen);
+        women = (RadioButton) findViewById(R.id.radioButtonWomen);
         save_data = (Button) findViewById(R.id.saveData);
         upload_picture = (Button) findViewById(R.id.buttonUpload);
         pic = (ImageView) findViewById(R.id.imageViewPic);
@@ -161,7 +168,9 @@ public class FirstTimeLogin extends AppCompatActivity {
     public void saveRegisterButtonClick(View view) {
         int ageInt = Integer.parseInt( age.getText().toString() );
         String locationStr = location.getSelectedItem().toString();
-        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), Female.isChecked() ? "Female" : "Male", "0",ageInt,locationStr);
+        String gender = female.isChecked() ? "Female" : "Male";
+        String interestedIn = intrestedIn();
+        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), gender, "0",ageInt,locationStr,interestedIn);
         user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
         // note : if user isnt made it will create it and then insert the new node
@@ -173,6 +182,18 @@ public class FirstTimeLogin extends AppCompatActivity {
 
     }
 
+    private String intrestedIn() {
+
+        if(men.isChecked()){
+            return "Male";
+        }
+        else if(women.isChecked()){
+            return "Female";
+        }
+        else{
+            return "Both";
+        }
+    }
 
 
     public void OnUploadOrCaptureClick(View view) {

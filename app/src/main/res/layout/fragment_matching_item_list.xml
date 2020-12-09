@@ -22,15 +22,6 @@
         tools:listitem="@layout/fragment_matching_item" />
 
     <Spinner
-        android:id="@+id/genderSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/Gender"
-        android:spinnerMode="dialog"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Spinner>
-
-    <Spinner
         android:id="@+id/locationSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +29,6 @@
         android:spinnerMode="dialog"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/ageSpinner"
-        app:layout_constraintStart_toEndOf="@+id/genderSpinner"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
