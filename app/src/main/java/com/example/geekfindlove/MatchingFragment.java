@@ -45,6 +45,8 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
     private Spinner age;
     private ArrayList<MatchingInformation> matchingList;
     private MatchingRecyclerViewAdapter matchingRecyclerViewAdapter;
+    private int minAge=18;
+    private int maxAge=60;
 
 
     /**
@@ -118,13 +120,18 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
         //matchingList.sort(byPrecent);
         matchingRecyclerViewAdapter.setmValues(matchingList);
         // converting the spinner age to two int varaibels.
-        String [] splitAge = age.getSelectedItem().toString().split("-");
-        int minAge = Integer.parseInt(splitAge[0]);
-        int maxAge = Integer.parseInt(splitAge[1]);
+        if(!age.getSelectedItem().toString().equals("Age")){
+            String [] splitAge = age.getSelectedItem().toString().split("-");
+             minAge = Integer.parseInt(splitAge[0]);
+             maxAge = Integer.parseInt(splitAge[1]);
+
+
+        }
         // taking the location value from location Spinner
         String locationn = location.getSelectedItem().toString();
 
-         MatchingAlgorithmSingleton.getInstance().setFilters(minAge,maxAge,locationn);
+        MatchingAlgorithmSingleton.getInstance().setFilters(minAge,maxAge,locationn);
+
 
     }
 

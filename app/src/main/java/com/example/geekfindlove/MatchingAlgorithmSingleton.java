@@ -25,9 +25,6 @@ public class MatchingAlgorithmSingleton {
 
     private MatchingAlgorithmSingleton() {
         //default values in case the user doesnt want to filter searching.
-        myMinAge = 18;
-        myMaxAge = 60;
-        myLoctaion = "Location";
 
     }
 
@@ -89,7 +86,7 @@ public class MatchingAlgorithmSingleton {
 
         if (candidentAge < myMinAge || candidentAge > myMaxAge) { // not correspond with my filter choice.(for age).
             return -1;
-        } else if (!candidentLocation.equals(myLoctaion)) { // the same for not equal wanted location search.
+        } else if (!candidentLocation.equals(myLoctaion) && !myLoctaion.equals("Location")) { // the same for not equal wanted location search.
             return -1;
         }
 
