@@ -38,6 +38,7 @@ public class AdminPickUpLineRecyclerViewAdapter extends RecyclerView.Adapter<Adm
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getValue());
 
+
         holder.databaseKey = mValues.get(position).getKey();
         holder.mDeleteButton.setOnClickListener(holder);
     }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.example.geekfindlove.dummy.DummyContent;
 import com.google.firebase.database.DataSnapshot;
@@ -31,13 +32,15 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class MatchingFragment extends Fragment implements ValueEventListener {
+public class MatchingFragment extends Fragment implements ValueEventListener  {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
+
+    // add spinners
     private ArrayList<MatchingInformation> matchingList;
     private MatchingRecyclerViewAdapter matchingRecyclerViewAdapter;
 
@@ -108,6 +111,7 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
         Collections.sort(matchingList,byPrecent);
         //matchingList.sort(byPrecent);
         matchingRecyclerViewAdapter.setmValues(matchingList);
+       //MatchingAlgorithmSingleton.getInstance().setFilters();
 
     }
     // "byPrecent" lambda, in order to implement the comparator needed to sort the hashmap.
