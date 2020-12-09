@@ -113,6 +113,22 @@ public class MatchingFragment extends Fragment implements ValueEventListener, Ad
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         matchingList.clear();
+
+        // if i dont pick age . it will show all the users.
+        if (!age.getSelectedItem().toString().equals("Age")) {
+            String[] splitAge = age.getSelectedItem().toString().split("-");
+            minAge = Integer.parseInt(splitAge[0]);
+            maxAge = Integer.parseInt(splitAge[1]);
+            // taking the location value from location Spinner
+
+        }
+        else{
+            minAge=18;
+            maxAge=60;
+        }
+        String locationn = location.getSelectedItem().toString();
+        MatchingAlgorithmSingleton.getInstance().setFilters(minAge, maxAge, locationn);
+
         for (DataSnapshot child : dataSnapshot.getChildren()) {
             UserAnswerInformation userAnswer = child.getValue(UserAnswerInformation.class);
             MatchingInformation matchingInformation = MatchingAlgorithmSingleton.getInstance().UserAnswerInformation_To_MatchingInformation(userAnswer);
@@ -124,17 +140,7 @@ public class MatchingFragment extends Fragment implements ValueEventListener, Ad
         //matchingList.sort(byPrecent);
         matchingRecyclerViewAdapter.setmValues(matchingList);
         // converting the spinner age to two int varaibels.
-        if(!age.getSelectedItem().toString().equals("Age")){
-            String [] splitAge = age.getSelectedItem().toString().split("-");
-             minAge = Integer.parseInt(splitAge[0]);
-             maxAge = Integer.parseInt(splitAge[1]);
 
-
-        }
-        // taking the location value from location Spinner
-        String locationn = location.getSelectedItem().toString();
-
-        MatchingAlgorithmSingleton.getInstance().setFilters(minAge,maxAge,locationn);
 
 
     }

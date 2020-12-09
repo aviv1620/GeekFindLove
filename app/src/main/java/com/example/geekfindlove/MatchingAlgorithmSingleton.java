@@ -25,6 +25,9 @@ public class MatchingAlgorithmSingleton {
 
     private MatchingAlgorithmSingleton() {
         //default values in case the user doesnt want to filter searching.
+        myMinAge=18;
+        myMaxAge=60;
+        myLoctaion="Location";
 
     }
 
@@ -42,6 +45,7 @@ public class MatchingAlgorithmSingleton {
         this.myMinAge = minAge;
         this.myMaxAge = maxAge;
         this.myLoctaion = loctaion;
+
 
     }
 
@@ -63,11 +67,13 @@ public class MatchingAlgorithmSingleton {
         UserInformation user = match.getUserDetails();
         //UserInformation u1 = new UserInformation("alice", "a", "alice@a.com", "female", "BgnkBYOP7dg8cY3Wc7GezM3IBSv2");
         int percentage = percentAlgorithm(match);
+
+
         if (percentage != -1) {
             MatchingInformation mi1 = new MatchingInformation(percentage, user.getId(), me.getUserDetails().getId(), user);
             return mi1;
         } else
-            return null;
+        return null;
 
     }
 
@@ -84,9 +90,10 @@ public class MatchingAlgorithmSingleton {
         String myWantedGender = me.getUserDetails().getActualOrientation(); //Men ,Women, Both
         String candidentWantedGender = match.getUserDetails().getActualOrientation();
 
+
         if (candidentAge < myMinAge || candidentAge > myMaxAge) { // not correspond with my filter choice.(for age).
             return -1;
-        } else if (!candidentLocation.equals(myLoctaion) && !myLoctaion.equals("Location")) { // the same for not equal wanted location search.
+        } else if (!myLoctaion.equals("Location") && !candidentLocation.equals(myLoctaion)) { // the same for not equal wanted location search.
             return -1;
         }
 
