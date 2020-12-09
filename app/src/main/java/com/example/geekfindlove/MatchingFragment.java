@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.example.geekfindlove.dummy.DummyContent;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class MatchingFragment extends Fragment implements ValueEventListener {
+public class MatchingFragment extends Fragment implements ValueEventListener, AdapterView.OnItemSelectedListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -94,6 +96,8 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
 
         age = (Spinner)view.findViewById(R.id.ageSpinner);
         location = (Spinner)view.findViewById(R.id.locationSpinner);
+        age.setOnItemSelectedListener(this);
+        location.setOnItemSelectedListener(this);
 
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -142,5 +146,22 @@ public class MatchingFragment extends Fragment implements ValueEventListener {
     public void onCancelled(@NonNull DatabaseError databaseError) {
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        //FirebaseDatabase
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = mDatabase.getReference("UserAnswer");
+        dbRef.removeEventListener(this);
+        dbRef.addValueEventListener(this);
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
+
 
