@@ -9,6 +9,16 @@ public class UserInformation {
     private String email;
     private String gender;
     private int age;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    private String phone;
     private String Location;
     private boolean isAdmin = false;
     private String actualOrientation; // sexual orieantation.
@@ -82,10 +92,9 @@ public class UserInformation {
     }
 
     public UserInformation(){
-
     }
 
-    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location,String actualOrientation) {
+    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location,String actualOrientation, String phone) {
         this.fn = fn;
         this.ln = ln;
         this.email = email;
@@ -93,6 +102,7 @@ public class UserInformation {
         this.age = age;
         this.Location = Location;
         this.actualOrientation=actualOrientation;
+        this.phone=phone;
     }
 
     public String toString() {

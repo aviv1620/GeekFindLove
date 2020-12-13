@@ -10,8 +10,10 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -57,12 +60,12 @@ public class FirstTimeLogin extends AppCompatActivity {
     private RadioButton both;
     private Button save_data;
     private Button upload_picture;
+    private EditText phone;
     // to upload picture
     private Uri imageUri;
     private ImageView pic;
     private String userChoosenTask;
     private ProgressDialog progressDialog;
-
 
 
     //user information
@@ -94,14 +97,14 @@ public class FirstTimeLogin extends AppCompatActivity {
         save_data = (Button) findViewById(R.id.saveData);
         upload_picture = (Button) findViewById(R.id.buttonUpload);
         pic = (ImageView) findViewById(R.id.imageViewPic);
-        age =  (EditText) findViewById(R.id.editTextAge);
+        age = (EditText) findViewById(R.id.editTextAge);
         location = (Spinner) findViewById(R.id.location);
+        phone = (EditText) findViewById(R.id.phoneNumber);
 
         mDatabase = FirebaseDatabase.getInstance();
         dbRootRef = mDatabase.getReference();
 
         pic.setImageResource(R.drawable.ic_launcher_background);
-
 
 
         //get user information
@@ -114,6 +117,65 @@ public class FirstTimeLogin extends AppCompatActivity {
         userId = user.getUid();
         String emailStr = user.getEmail();
         email.setText(emailStr);
+        // if the singleTon was null, and the instance of getMe was null, it means the user is not
+        // in the tree yet, and therefore we dont have any information to load to edit page.
+        // we enter only if its not null-> only if theres information to load
+        if( MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails()!=null)
+            setDetailsWhenEditProfile();
+    }
+    // this function is used for loading the user information into the edit profile page.
+    // each user will decide which of the parameters he would like to change, and if he doesnt change
+    // it remains the same as it was before.
+    private void setDetailsWhenEditProfile(){
+        UserInformation userDetails = MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails();
+        fn.setText(userDetails.getFn());
+        ln.setText(userDetails.getLn());
+        if (userDetails.getGender().equals("Female")) {
+            female.setChecked(true);
+        } else {
+            male.setChecked(true);
+        }
+        if (userDetails.getActualOrientation().equals("Both")) {
+            both.setChecked(true);
+        } else if (userDetails.getActualOrientation().equals("Male"))
+            men.setChecked(true);
+        else {
+            women.setChecked(true);
+        }
+       age.setText(String.valueOf(userDetails.getAge()));
+
+        if (userDetails.getLocation().equals("Location"))
+            location.setSelection(0);
+        else if (userDetails.getLocation().equals("North"))
+            location.setSelection(1);
+        else if (userDetails.getLocation().equals("Center"))
+            location.setSelection(2);
+        else
+            location.setSelection(3);
+
+        phone.setText(userDetails.getPhone());
+
+        // setting the picture
+         FirebaseStorage mDatabase; // creating database object
+         StorageReference dbRef; // creating reference to our database
+
+        // thats the references for the pointer to Storage in firebase(for picture)
+        mDatabase=FirebaseStorage.getInstance();
+        dbRef = mDatabase.getReference().child("Uploads/"+userDetails.getId()+"/profile");
+
+        try {
+            File localFile = File.createTempFile("images", "jpg");
+            dbRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    pic.setImageBitmap(bitmap);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // defining completionListener -> it will tell us if the saving has been succeeded or not.
@@ -149,39 +211,30 @@ public class FirstTimeLogin extends AppCompatActivity {
             }
 
 
-
-
-
-
         }
     };
 
     public void saveRegisterButtonClick(View view) {
-        int ageInt = Integer.parseInt( age.getText().toString() );
+        int ageInt = Integer.parseInt(age.getText().toString());
         String locationStr = location.getSelectedItem().toString();
         String gender = female.isChecked() ? "Female" : "Male";
         String interestedIn = intrestedIn();
-        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), gender, "0",ageInt,locationStr,interestedIn);
+        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), gender, "0", ageInt, locationStr, interestedIn, phone.getText().toString());
         user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
         // note : if user isnt made it will create it and then insert the new node
         dbRootRef.child("users").child(user.getId()).setValue(user, completionListener); // the completionListener can tell us if the save succeeded or not.
         // once a user is being register, we want to save his information also in the UserAnsweres in firebase, so there we wont need to search him up all over again‏
         dbRootRef.child("UserAnswer").child(user.getId()).child("userDetails").setValue(user);
-
-
-
     }
 
     private String intrestedIn() {
 
-        if(men.isChecked()){
+        if (men.isChecked()) {
             return "Male";
-        }
-        else if(women.isChecked()){
+        } else if (women.isChecked()) {
             return "Female";
-        }
-        else{
+        } else {
             return "Both";
         }
     }
@@ -239,7 +292,6 @@ public class FirstTimeLogin extends AppCompatActivity {
             }
 
 
-
         }
 
     }
@@ -269,7 +321,6 @@ public class FirstTimeLogin extends AppCompatActivity {
         }
 
         pic.setImageBitmap(bitmap);
-
 
 
     }

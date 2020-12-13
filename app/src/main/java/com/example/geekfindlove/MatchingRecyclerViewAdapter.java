@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  */
-public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRecyclerViewAdapter.ViewHolder> {
+public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRecyclerViewAdapter.ViewHolder> implements View.OnClickListener {
 
     private static final String TAG = "MatchingRecycler";
     private List<MatchingInformation> mValues;
@@ -42,7 +43,7 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        MatchingInformation mi =  mValues.get(position);
+        MatchingInformation mi = mValues.get(position);
         UserInformation u = mi.getDstDetail();
 
 
@@ -53,13 +54,13 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         //holder.showNumber TODO show the number.
         //holder.avatar TODO load the avatar.
 
-        FirebaseStorage mDatabase = FirebaseStorage.getInstance();; // creating database object
+        FirebaseStorage mDatabase = FirebaseStorage.getInstance();
+        ; // creating database object
         StorageReference dbRef; // creating reference to our database
 
-        String path = "Uploads/"+mi.getUserIdDst()+"/profile";
-        Log.d(TAG,path);
+        String path = "Uploads/" + mi.getUserIdDst() + "/profile";
+        Log.d(TAG, path);
         dbRef = mDatabase.getReference().child(path);
-
         try {
             File localFile = File.createTempFile("images", "jpg");
             holder.absolutePath = localFile.getAbsolutePath();
@@ -67,7 +68,18 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        holder.showNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.clickSetting == false) {
+                    holder.showNumber.setText(u.getPhone());
+                    holder.clickSetting = true;
+                } else {
+                    holder.showNumber.setText("Phone Number");
+                    holder.clickSetting = false;
+                }
+            }
+        });
     }
 
     @Override
@@ -80,12 +92,18 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         notifyDataSetChanged(); // notifying android that we changed the list,refresh the list that was empty at first.
     }
 
+    @Override
+    public void onClick(View v) {
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements OnSuccessListener<FileDownloadTask.TaskSnapshot> {
         public final TextView MatchingName;
         public final TextView MatchingPercent;
         public final Button showNumber;
         public final ImageView avatar;
         public MatchingInformation mItem;
+        public boolean clickSetting;
 
         public String absolutePath;
 
@@ -94,8 +112,9 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
 
             MatchingName = (TextView) view.findViewById(R.id.textViewMatchingName);
             MatchingPercent = (TextView) view.findViewById(R.id.textViewMatchingPercent);
-            showNumber = (Button)view.findViewById(R.id.buttonMatchingshowNumber);
-            avatar =  (ImageView)view.findViewById(R.id.imageViewMatchingAvatar);
+            showNumber = (Button) view.findViewById(R.id.buttonMatchingshowNumber);
+            avatar = (ImageView) view.findViewById(R.id.imageViewMatchingAvatar);
+            clickSetting = false;
         }
 
         @Override
@@ -109,5 +128,6 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
             Bitmap bitmap = BitmapFactory.decodeFile(absolutePath);
             avatar.setImageBitmap(bitmap);
         }
+
     }
 }
