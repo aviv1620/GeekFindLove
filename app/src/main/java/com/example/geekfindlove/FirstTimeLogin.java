@@ -3,12 +3,17 @@ package com.example.geekfindlove;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -46,6 +51,7 @@ import java.io.IOException;
 //Todo: need to add Permissions for camera while the user needs to use it to insert a photo to his/hers profile.
 
 public class FirstTimeLogin extends AppCompatActivity {
+    private final int STORAGE_PERMISSION_CODE=1;
     private static final String TAG = "FirstTimeLogin";
     private UserInformation user;
     private EditText fn; // first name
@@ -226,6 +232,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         dbRootRef.child("users").child(user.getId()).setValue(user, completionListener); // the completionListener can tell us if the save succeeded or not.
         // once a user is being register, we want to save his information also in the UserAnsweres in firebase, so there we wont need to search him up all over again‏
         dbRootRef.child("UserAnswer").child(user.getId()).child("userDetails").setValue(user);
+
     }
 
     private String intrestedIn() {
@@ -241,29 +248,88 @@ public class FirstTimeLogin extends AppCompatActivity {
 
 
     public void OnUploadOrCaptureClick(View view) {
-        final CharSequence[] items = {"Take Photo", "Choose from gallery", "Cancel"
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(FirstTimeLogin.this);
-        builder.setTitle("Add Photo");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // boolean result = Utility
 
-                if (items[i].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    cameraIntent();
-                } else if (items[i].equals("Choose from gallery")) {
-                    userChoosenTask = "Choose from gallery";
-                    galleryIntent();
-                } else if (items[i].equals("Cancel")) {
-                    dialogInterface.dismiss();
+        // need to ask for permission
+
+        // first we check if the permission was granted.
+        Log.v("Elad","check if we have permission");
+        if(ContextCompat.checkSelfPermission(FirstTimeLogin.this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED) {
+            Log.v("Elad","we have permission so access");
+
+            final CharSequence[] items = {"Take Photo", "Choose from gallery", "Cancel"
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(FirstTimeLogin.this);
+            builder.setTitle("Add Photo");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // boolean result = Utility
+
+                    if (items[i].equals("Take Photo")) {
+                        userChoosenTask = "Take Photo";
+                        cameraIntent();
+                    } else if (items[i].equals("Choose from gallery")) {
+                        userChoosenTask = "Choose from gallery";
+                        galleryIntent();
+                    } else if (items[i].equals("Cancel")) {
+                        dialogInterface.dismiss();
+                    }
                 }
-            }
-        });
-        builder.show();
+            });
+            builder.show();
+        }
+        else{
+            requestStoragePermission();
+        }
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == STORAGE_PERMISSION_CODE){
+            if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                Log.v("Elad","permission granted");
+                OnUploadOrCaptureClick(null);
+            }
+            else{
+                Toast.makeText(this,"Permission denied",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void requestStoragePermission() {
+
+        // if the user Deny the permission before we want to open dialog to explain why we ask permission
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
+            Log.v("Elad","usser denied be4");
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permisiion is needed because of this and that")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+                            ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.CAMERA},STORAGE_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+           // ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.CAMERA},STORAGE_PERMISSION_CODE);
+            Log.v("Elad","user didnt denied be4");
+        }
+
+
+
+    }
+
+
 
     private void galleryIntent() {
         Intent intent = new Intent();

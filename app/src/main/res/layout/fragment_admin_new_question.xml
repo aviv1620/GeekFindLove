@@ -10,15 +10,18 @@
         android:id="@+id/buttonSend"
         android:layout_width="match_parent"
         android:layout_height="63dp"
+        android:layout_marginBottom="4dp"
         android:text="send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/buttonAddAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:text="Add Answer"
         app:layout_constraintBottom_toTopOf="@+id/buttonSend"
         app:layout_constraintStart_toStartOf="parent" />
@@ -27,34 +30,49 @@
         android:id="@+id/answerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:ems="10"
         android:hint="answer"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/buttonSend"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintStart_toEndOf="@+id/buttonAddAnswer" />
 
     <EditText
         android:id="@+id/question_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="true"
         android:ems="10"
         android:gravity="start|top"
         android:hint="question text"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="376dp"
+        android:layout_height="251dp"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/answerText"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/question_text" />
+
+    <Button
+        android:id="@+id/buttonDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="DEL ANSWER"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAddAnswer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

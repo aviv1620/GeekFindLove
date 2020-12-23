@@ -1,7 +1,9 @@
 package com.example.geekfindlove;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +27,7 @@ import java.util.List;
 /**
  *
  */
-public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRecyclerViewAdapter.ViewHolder> implements View.OnClickListener {
+public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "MatchingRecycler";
     private List<MatchingInformation> mValues;
@@ -38,6 +40,8 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_matching_item, parent, false);
+
+
         return new ViewHolder(view);
     }
 
@@ -45,7 +49,7 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
     public void onBindViewHolder(final ViewHolder holder, int position) {
         MatchingInformation mi = mValues.get(position);
         UserInformation u = mi.getDstDetail();
-
+        holder.showNumber.setText(u.getPhone());
 
         holder.mItem = mi;
         holder.MatchingName.setText(u.getFn() + " " + u.getLn());
@@ -68,18 +72,17 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         } catch (IOException e) {
             e.printStackTrace();
         }
-        holder.showNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.clickSetting == false) {
-                    holder.showNumber.setText(u.getPhone());
-                    holder.clickSetting = true;
-                } else {
-                    holder.showNumber.setText("Phone Number");
-                    holder.clickSetting = false;
-                }
-            }
+
+
+        holder.showNumber.setOnClickListener(v -> {
+
+            holder.intent = new Intent(Intent.ACTION_DIAL);
+            holder.intent.setData(Uri.parse("tel:" + u.getPhone()));
+            holder.itemView.getContext().startActivity(holder.intent);
+
+
         });
+
     }
 
     @Override
@@ -92,10 +95,6 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         notifyDataSetChanged(); // notifying android that we changed the list,refresh the list that was empty at first.
     }
 
-    @Override
-    public void onClick(View v) {
-    }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements OnSuccessListener<FileDownloadTask.TaskSnapshot> {
         public final TextView MatchingName;
@@ -103,7 +102,7 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
         public final Button showNumber;
         public final ImageView avatar;
         public MatchingInformation mItem;
-        public boolean clickSetting;
+        public Intent intent;
 
         public String absolutePath;
 
@@ -114,7 +113,7 @@ public class MatchingRecyclerViewAdapter extends RecyclerView.Adapter<MatchingRe
             MatchingPercent = (TextView) view.findViewById(R.id.textViewMatchingPercent);
             showNumber = (Button) view.findViewById(R.id.buttonMatchingshowNumber);
             avatar = (ImageView) view.findViewById(R.id.imageViewMatchingAvatar);
-            clickSetting = false;
+
         }
 
         @Override

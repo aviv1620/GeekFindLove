@@ -2,6 +2,7 @@ package com.example.geekfindlove;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,14 @@ public class PickUpLineRecyclerViewAdapter extends RecyclerView.Adapter<PickUpLi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_pickupline_item, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mContentView.setText(mValues.get(position).getValue());
+
 
     }
 
@@ -53,6 +56,7 @@ public class PickUpLineRecyclerViewAdapter extends RecyclerView.Adapter<PickUpLi
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
+
         }
 
 

@@ -5,10 +5,11 @@ import android.accessibilityservice.GestureDescription;
 import java.util.HashMap;
 
 public class UserAnswerInformation {
-    private HashMap<String,Integer> answer;
-    private UserInformation  userDetails;
+    private HashMap<String, Integer> answer;
+    private UserInformation userDetails;
 
-    public UserAnswerInformation(){}
+    public UserAnswerInformation() {
+    }
 
     public UserAnswerInformation(HashMap<String, Integer> answer, UserInformation userDetails) {
         this.answer = answer;
@@ -32,6 +33,6 @@ public class UserAnswerInformation {
     }
 
     public void put(String questionID, int itemPosition) {
-        answer.put(questionID,itemPosition);
+        answer.put(questionID, itemPosition);
     }
 }
