@@ -3,6 +3,9 @@ package com.example.geekfindlove;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.example.geekfindlove.MyNewIntentService.NOTIFICATION_ID;
 
 public class MainActivity extends AppCompatActivity implements ValueEventListener, View.OnClickListener {
 
@@ -60,6 +65,13 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
                 signIn(user);
             }
         }
+
+        Intent notifyIntent = new Intent(this,myReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (this,NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
+                1000 * 60 , pendingIntent);
     }
 
     @Override
