@@ -8,7 +8,7 @@ public class UserInformation {
     private String ln;
     private String email;
     private String gender;
-    private int age;
+    private String age;
 
     public String getPhone() {
         return phone;
@@ -23,7 +23,7 @@ public class UserInformation {
     private boolean isAdmin = false;
     private String actualOrientation; // sexual orieantation.
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
@@ -39,7 +39,7 @@ public class UserInformation {
         return Location;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
@@ -94,7 +94,7 @@ public class UserInformation {
     public UserInformation(){
     }
 
-    public UserInformation(String fn, String ln, String email, String gender, String id,int age,String Location,String actualOrientation, String phone) {
+    public UserInformation(String fn, String ln, String email, String gender, String id,String age,String Location,String actualOrientation, String phone) {
         this.fn = fn;
         this.ln = ln;
         this.email = email;

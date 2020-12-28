@@ -2,6 +2,8 @@ package com.example.geekfindlove;
 
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
 
 
@@ -25,10 +27,14 @@ public class MatchingAlgorithmSingleton {
 
     private MatchingAlgorithmSingleton() {
         //default values in case the user doesnt want to filter searching.
-        myMinAge=18;
-        myMaxAge=60;
-        myLoctaion="Location";
+        myMinAge = 18;
+        myMaxAge = 60;
+        myLoctaion = "Location";
 
+    }
+
+    public static void logout_setNULL() {
+        matchingAlgorithmSingleton = null;
     }
 
     public void setMe(UserAnswerInformation me) {
@@ -66,6 +72,7 @@ public class MatchingAlgorithmSingleton {
 
         UserInformation user = match.getUserDetails();
         //UserInformation u1 = new UserInformation("alice", "a", "alice@a.com", "female", "BgnkBYOP7dg8cY3Wc7GezM3IBSv2");
+        Log.v("Elad", "im hereeee" +match.getUserDetails().getAge());
         int percentage = percentAlgorithm(match);
 
 
@@ -73,7 +80,7 @@ public class MatchingAlgorithmSingleton {
             MatchingInformation mi1 = new MatchingInformation(percentage, user.getId(), me.getUserDetails().getId(), user);
             return mi1;
         } else
-        return null;
+            return null;
 
     }
 
@@ -84,7 +91,9 @@ public class MatchingAlgorithmSingleton {
         double count = 0; // count how many questions the two user answered the same. so then we can divide and get the percentage
         double num_of_questions = 0; // if one user answered 10 question, and one user answered 20 questions,
         // we want the sum of question they both answered, regardless the answer
-        int candidentAge = match.getUserDetails().getAge();
+        Log.v("Elad", "im hereeee2" +match.getUserDetails().getAge());
+        int candidentAge =age(match.getUserDetails().getAge());
+        Log.v("Elad", "im hereeee3" +candidentAge);
         String candidentLocation = match.getUserDetails().getLocation();
 
         String myWantedGender = me.getUserDetails().getActualOrientation(); //Men ,Women, Both
@@ -120,6 +129,17 @@ public class MatchingAlgorithmSingleton {
         if (num_of_questions == 0) // if they didn't answer the same questions, also fixing arithmetic exception "divide by zero"
             return 0;
         return (int) ((count / num_of_questions) * 100);
+    }
+
+    private int age(String dateOfAge) {
+        Log.v("Elad", "checking date"+dateOfAge);
+        Calendar cal = Calendar.getInstance();
+        int currentYear = cal.get(Calendar.YEAR);
+        //String [] split_age= dateOfAge.split(".");
+        String year=dateOfAge.substring(dateOfAge.length()-4,dateOfAge.length());
+        Log.v("Elad", "checking spot"+year);
+        int yearOfBirth= Integer.parseInt(year);
+        return currentYear-yearOfBirth; // for example 2020-1997 we will receive 23
     }
 
 }

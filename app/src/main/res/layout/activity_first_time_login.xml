@@ -172,7 +172,7 @@
             android:layout_width="130dp"
             android:layout_height="38dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="96dp"
+            android:layout_marginEnd="88dp"
             android:entries="@array/Location"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -181,23 +181,13 @@
             android:id="@+id/textView7"
             android:layout_width="123dp"
             android:layout_height="38dp"
-            android:layout_marginTop="20dp"
-            android:text="age"
-            app:layout_constraintEnd_toStartOf="@+id/editTextAge"
-            app:layout_constraintHorizontal_bias="0.231"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Age"
+            app:layout_constraintEnd_toStartOf="@+id/selectAge"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-        <EditText
-            android:id="@+id/editTextAge"
-            android:layout_width="123dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="96dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/location" />
 
         <TextView
             android:id="@+id/textView6"
@@ -215,9 +205,8 @@
             android:layout_width="157dp"
             android:layout_height="157dp"
             android:layout_marginStart="48dp"
-            android:layout_marginTop="112dp"
             app:layout_constraintStart_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/editTextAge">
+            app:layout_constraintTop_toBottomOf="@+id/textView6">
 
             <RadioButton
                 android:id="@+id/radioButtonMen"
@@ -268,9 +257,19 @@
             android:ems="10"
             android:inputType="phone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.355"
+            app:layout_constraintHorizontal_bias="0.342"
             app:layout_constraintStart_toEndOf="@+id/PhoneText"
-            app:layout_constraintTop_toBottomOf="@+id/editTextAge" />
+            app:layout_constraintTop_toBottomOf="@+id/selectAge" />
+
+        <TextView
+            android:id="@+id/selectAge"
+            android:layout_width="160dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="60dp"
+            android:text="Click to select your age"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

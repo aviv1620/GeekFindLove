@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -16,6 +17,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -24,10 +27,12 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,17 +52,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 //Todo: need to add Permissions for camera while the user needs to use it to insert a photo to his/hers profile.
 
-public class FirstTimeLogin extends AppCompatActivity {
-    private final int STORAGE_PERMISSION_CODE=1;
+public class FirstTimeLogin extends AppCompatActivity implements View.OnClickListener {
+    private final int STORAGE_PERMISSION_CODE = 1;
     private static final String TAG = "FirstTimeLogin";
     private UserInformation user;
     private EditText fn; // first name
     private EditText ln; // last name
     private EditText email; // first name
-    private EditText age;
+    private TextView age;
+//    private int ageInt=0;
+    private DatePickerDialog dialog;
     private Spinner location;
     private RadioButton male;
     private RadioButton female;
@@ -103,10 +111,10 @@ public class FirstTimeLogin extends AppCompatActivity {
         save_data = (Button) findViewById(R.id.saveData);
         upload_picture = (Button) findViewById(R.id.buttonUpload);
         pic = (ImageView) findViewById(R.id.imageViewPic);
-        age = (EditText) findViewById(R.id.editTextAge);
+        age = (TextView) findViewById(R.id.selectAge);
         location = (Spinner) findViewById(R.id.location);
         phone = (EditText) findViewById(R.id.phoneNumber);
-
+        age.setOnClickListener(this);
         mDatabase = FirebaseDatabase.getInstance();
         dbRootRef = mDatabase.getReference();
 
@@ -126,13 +134,14 @@ public class FirstTimeLogin extends AppCompatActivity {
         // if the singleTon was null, and the instance of getMe was null, it means the user is not
         // in the tree yet, and therefore we dont have any information to load to edit page.
         // we enter only if its not null-> only if theres information to load
-        if( MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails()!=null)
+        if (MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails() != null)
             setDetailsWhenEditProfile();
     }
+
     // this function is used for loading the user information into the edit profile page.
     // each user will decide which of the parameters he would like to change, and if he doesnt change
     // it remains the same as it was before.
-    private void setDetailsWhenEditProfile(){
+    private void setDetailsWhenEditProfile() {
         UserInformation userDetails = MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails();
         fn.setText(userDetails.getFn());
         ln.setText(userDetails.getLn());
@@ -148,7 +157,7 @@ public class FirstTimeLogin extends AppCompatActivity {
         else {
             women.setChecked(true);
         }
-       age.setText(String.valueOf(userDetails.getAge()));
+        age.setText(String.valueOf(userDetails.getAge()));
 
         if (userDetails.getLocation().equals("Location"))
             location.setSelection(0);
@@ -162,12 +171,12 @@ public class FirstTimeLogin extends AppCompatActivity {
         phone.setText(userDetails.getPhone());
 
         // setting the picture
-         FirebaseStorage mDatabase; // creating database object
-         StorageReference dbRef; // creating reference to our database
+        FirebaseStorage mDatabase; // creating database object
+        StorageReference dbRef; // creating reference to our database
 
         // thats the references for the pointer to Storage in firebase(for picture)
-        mDatabase=FirebaseStorage.getInstance();
-        dbRef = mDatabase.getReference().child("Uploads/"+userDetails.getId()+"/profile");
+        mDatabase = FirebaseStorage.getInstance();
+        dbRef = mDatabase.getReference().child("Uploads/" + userDetails.getId() + "/profile");
 
         try {
             File localFile = File.createTempFile("images", "jpg");
@@ -193,8 +202,14 @@ public class FirstTimeLogin extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("Uploading");
             progressDialog.show();
-            if (imageUri != null) {
-                Intent intent = new Intent(this, UserActivity1.class);
+            Intent intent = new Intent(this, UserActivity1.class);
+            if(imageUri == null && user!=null){
+              progressDialog.dismiss();
+              Toast.makeText(getApplicationContext(), "Operation made successfully", Toast.LENGTH_LONG).show();
+              startActivity(intent);
+            }
+            else if (imageUri != null) {
+                //Intent intent = new Intent(this, UserActivity1.class);
                 final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child("profile");
                 //final StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("Uploads").child(userId).child(imageUri.getLastPathSegment() + " " + getFileExtention(imageUri));
                 fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -221,11 +236,10 @@ public class FirstTimeLogin extends AppCompatActivity {
     };
 
     public void saveRegisterButtonClick(View view) {
-        int ageInt = Integer.parseInt(age.getText().toString());
         String locationStr = location.getSelectedItem().toString();
         String gender = female.isChecked() ? "Female" : "Male";
         String interestedIn = intrestedIn();
-        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), gender, "0", ageInt, locationStr, interestedIn, phone.getText().toString());
+        user = new UserInformation(fn.getText().toString(), ln.getText().toString(), email.getText().toString(), gender, "0", age.getText().toString(), locationStr, interestedIn, phone.getText().toString());
         user.setId(userId); // user id is the key.
         // inserting into user node a child - new node as the new user.id that we recieved.
         // note : if user isnt made it will create it and then insert the new node
@@ -252,9 +266,9 @@ public class FirstTimeLogin extends AppCompatActivity {
         // need to ask for permission
 
         // first we check if the permission was granted.
-        Log.v("Elad","check if we have permission");
-        if(ContextCompat.checkSelfPermission(FirstTimeLogin.this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED) {
-            Log.v("Elad","we have permission so access");
+        Log.v("Elad", "check if we have permission");
+        if (ContextCompat.checkSelfPermission(FirstTimeLogin.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Log.v("Elad", "we have permission so access");
 
             final CharSequence[] items = {"Take Photo", "Choose from gallery", "Cancel"
             };
@@ -277,8 +291,7 @@ public class FirstTimeLogin extends AppCompatActivity {
                 }
             });
             builder.show();
-        }
-        else{
+        } else {
             requestStoragePermission();
         }
 
@@ -286,13 +299,12 @@ public class FirstTimeLogin extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == STORAGE_PERMISSION_CODE){
-            if(grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                Log.v("Elad","permission granted");
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v("Elad", "permission granted");
                 OnUploadOrCaptureClick(null);
-            }
-            else{
-                Toast.makeText(this,"Permission denied",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -300,8 +312,8 @@ public class FirstTimeLogin extends AppCompatActivity {
     private void requestStoragePermission() {
 
         // if the user Deny the permission before we want to open dialog to explain why we ask permission
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
-            Log.v("Elad","usser denied be4");
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            Log.v("Elad", "usser denied be4");
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("This permisiion is needed because of this and that")
@@ -309,7 +321,7 @@ public class FirstTimeLogin extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
-                            ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.CAMERA},STORAGE_PERMISSION_CODE);
+                            ActivityCompat.requestPermissions(FirstTimeLogin.this, new String[]{Manifest.permission.CAMERA}, STORAGE_PERMISSION_CODE);
                         }
                     })
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -319,16 +331,14 @@ public class FirstTimeLogin extends AppCompatActivity {
                         }
                     })
                     .create().show();
-        }else{
-           // ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
-            ActivityCompat.requestPermissions(FirstTimeLogin.this,new String[]{Manifest.permission.CAMERA},STORAGE_PERMISSION_CODE);
-            Log.v("Elad","user didnt denied be4");
+        } else {
+            // ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(FirstTimeLogin.this, new String[]{Manifest.permission.CAMERA}, STORAGE_PERMISSION_CODE);
+            Log.v("Elad", "user didnt denied be4");
         }
 
 
-
     }
-
 
 
     private void galleryIntent() {
@@ -415,5 +425,32 @@ public class FirstTimeLogin extends AppCompatActivity {
 
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == age) {
+            Calendar cal = Calendar.getInstance();
+            int currentYear = cal.get(Calendar.YEAR);
+            int currentMonth = cal.get(Calendar.MONTH);
+            int currentDay = cal.get(Calendar.DAY_OF_MONTH);
+            dialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light, new lisiner(), currentYear, currentMonth, currentDay);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        }
+    }
+
+    class lisiner implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            Calendar cal = Calendar.getInstance();
+            int currentYear = cal.get(Calendar.YEAR);
+            month=month+1;
+            age.setText(dayOfMonth + "." + month + "." + year);
+            Log.v("Sivan",currentYear+"current");
+            Log.v("Sivan",year+"year");
+//            ageInt=currentYear-year;
+        }
     }
 }

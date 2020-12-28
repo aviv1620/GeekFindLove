@@ -54,7 +54,11 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         if (user == null) {//not sign
             openSignInActivity();
         } else { //already sign
-            signIn(user);
+            if (MatchingAlgorithmSingleton.getInstance().getMe().getUserDetails() != null) {
+                MatchingAlgorithmSingleton.logout_setNULL();
+            } else {
+                signIn(user);
+            }
         }
     }
 
@@ -101,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     @Override
     protected void onStop() {
         super.onStop();
-        if(dbRef != null)
+        if (dbRef != null)
             dbRef.removeEventListener(this);
     }
 

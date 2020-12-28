@@ -1,13 +1,16 @@
 package com.example.geekfindlove;
 
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -25,6 +28,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +55,7 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
     private EditText editTextQuestionText;
     private ArrayList<String> listAnswer;
     private ArrayAdapter<String> adapter;
-    private ArrayList<Integer> itemToDelete;
+   private List<Integer> itemToDelete;
     private int toDelete = -1;
     ListView listView;
 
@@ -87,7 +99,7 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
         buttonSend.setOnClickListener(this);
         buttonDelAnswer.setOnClickListener(this);
 
-        itemToDelete = new ArrayList<>();
+        itemToDelete = new ArrayList<Integer>();
         listAnswer = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, listAnswer);
         listView.setAdapter(adapter);
@@ -97,7 +109,7 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
         listView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
             @Override
             public void onChildViewAdded(View view, View view1) {
-
+                view1.setEnabled(true);
             }
 
             @Override
@@ -113,7 +125,6 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
     class OnItemSelected implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
             if (view.isEnabled()) {
                 view.setEnabled(false);
                 itemToDelete.add(i);
@@ -122,14 +133,14 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
                 view.setEnabled(true);
                 itemToDelete.remove(i);
                 // toDelete = -1;
-
-
             }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
+
         if (v == buttonAnswer) {
 
             CharSequence answer = editTextAnswerText.getText();
@@ -150,24 +161,21 @@ public class AdminNewQuestionFragment extends Fragment implements View.OnClickLi
             dbRootRef.child(id).setValue(questionsInformation, this);
 
         } else if (v == buttonDelAnswer) {
-
+           itemToDelete.sort(new decendingOrder()); // we are sorting the positions in order to delete them
+            // in a way that does not affect the next deletion
             for (int pos : itemToDelete) {
-                //if (toDelete != -1) {
-
-                //listView.removeViews(toDelete, 1);
                 listView.removeViews(pos, 1);
                 listAnswer.remove(pos);
-                //itemToDelete.remove(pos);
-                adapter.notifyDataSetChanged();
-                // toDelete = -1;
-
-
-                //  }
-            }
+               adapter.notifyDataSetChanged();
+           }
             itemToDelete.clear();
-
         }
-
+    }
+    public class decendingOrder implements Comparator<Integer> {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o2-o1;
+        }
     }
 
     @Override

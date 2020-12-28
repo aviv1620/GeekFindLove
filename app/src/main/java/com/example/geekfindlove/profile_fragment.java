@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +35,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +53,7 @@ public class profile_fragment extends androidx.fragment.app.Fragment implements 
     private DatabaseReference dbRef2; // creating reference to our database
 
     private Button editButton;
+    private Button logout;
     //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -115,8 +119,10 @@ public class profile_fragment extends androidx.fragment.app.Fragment implements 
         profilePic = (ImageView) view.findViewById(R.id.imageViewProfile);
         hello = (TextView) view.findViewById(R.id.textViewHello);
         editButton = (Button)view.findViewById(R.id.buttonEditProfile);
+        logout= (Button)view.findViewById(R.id.logout);
 
         editButton.setOnClickListener(this);
+        logout.setOnClickListener(this);
 
 
         try {
@@ -153,7 +159,14 @@ public class profile_fragment extends androidx.fragment.app.Fragment implements 
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(getActivity(), FirstTimeLogin.class);
-        startActivity(i);
+        if(v==editButton) {
+            Intent i = new Intent(getActivity(), FirstTimeLogin.class);
+            startActivity(i);
+        }
+        else if(v==logout){
+            Intent i = new Intent(getActivity(), MainActivity.class);
+            startActivity(i);
+        }
+
     }
 }
