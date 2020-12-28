@@ -2,11 +2,16 @@ package com.example.geekfindlove;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,8 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.geekfindlove.MyNewIntentService.NOTIFICATION_ID;
-
 public class MainActivity extends AppCompatActivity implements ValueEventListener, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 1;
@@ -39,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     //Buttons
     private Button signIn;
     private Button signUpOrSwitchUser;
+
+    // notification
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +71,14 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
                 signIn(user);
             }
         }
-
-        Intent notifyIntent = new Intent(this,myReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast
-                (this,NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
-                1000 * 60 , pendingIntent);
+        notificationManager= NotificationManagerCompat.from(this);
+        createNotificationChannel();
+        Intent intent= new Intent(MainActivity.this, Reminder.class);
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+        AlarmManager alarmManager= (AlarmManager)getSystemService(ALARM_SERVICE);
+        //each time we enter the app, the timer will be reseted. if we didnt enter for a day since the last time we entered, we will
+        // recieve a notification that we need to check out the app
+        alarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+24*60*60*1000,pendingIntent);
     }
 
     @Override
@@ -159,5 +166,18 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
                 Toast.makeText(this, "oops something's wrong. place try switch user and enter the main and password again.", Toast.LENGTH_LONG).show();
         } else if (v == signUpOrSwitchUser)
             openSignInActivity();
+    }
+
+    //for the notification
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+           CharSequence name= "GeeksFindLove";
+           String description= "Channel for Geeks find love";
+           int importance= NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel= new NotificationChannel("notifyGeek", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager= getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

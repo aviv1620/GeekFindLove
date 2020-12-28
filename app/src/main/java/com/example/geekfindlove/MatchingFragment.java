@@ -134,6 +134,9 @@ public class MatchingFragment extends Fragment implements ValueEventListener, Ad
             MatchingInformation matchingInformation = MatchingAlgorithmSingleton.getInstance().UserAnswerInformation_To_MatchingInformation(userAnswer);
             if (matchingInformation != null)
                 matchingList.add(matchingInformation);
+            /*
+            now we will create a notification that once a match is added , we want the user to be notify
+             */
         }
         // "byPrecent" anonymous class, in order to implement the comparator needed to sort the hashmap.
         Collections.sort(matchingList, byPrecent);
