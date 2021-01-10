@@ -4,6 +4,8 @@
     android:id="@+id/ItemQuestion"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:background="@drawable/shape"
     android:orientation="vertical">
 
     <TextView
@@ -21,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:paddingLeft="10dp"
-        android:paddingBottom="30dp" />
+        android:entries="@array/Question_example" />
 
 </LinearLayout>
