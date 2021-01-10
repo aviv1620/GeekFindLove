@@ -168,7 +168,8 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
             openSignInActivity();
     }
 
-    //for the notification
+    //for the notification Channels
+    //https://developer.android.com/training/notify-user/channels
     private void createNotificationChannel(){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
            CharSequence name= "GeeksFindLove";
